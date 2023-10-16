@@ -1,0 +1,6 @@
+// ĐỂ DÙNG IMPORT EXPORT * from 
+{
+    "presets": [
+        "@babel/preset-env"
+    ]
+}
