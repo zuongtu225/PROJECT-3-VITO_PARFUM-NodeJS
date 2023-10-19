@@ -8,7 +8,7 @@ addressRouter.get(
   [checkAuthentication],
   controllers.getAddressByUser
 );
-addressRouter.post("/create", [checkAuthentication], controllers.createAddress);
+addressRouter.post("/", [checkAuthentication], controllers.createAddress);
 addressRouter.put("/:id", controllers.updateAddress);
 addressRouter.delete("/:id", controllers.deleteAddress);
 

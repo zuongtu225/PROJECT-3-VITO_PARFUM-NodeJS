@@ -1,13 +1,24 @@
+import { getOneCartbyUserRepository } from "../repositories/cartRepository";
 import {
   createOrderItemRepository,
-  deleteOrderItemRepository,
   getAllOrderItemRepository,
   getOrderItemByUserRepository,
-  updateOrderItemRepository,
 } from "../repositories/orderItemsRepository";
-export const createOrderItemServices = async (data) => {
+
+export const createOrderItemServices = async ({ id }) => {
   try {
-    const response = await createOrderItemRepository(data);
+    const listCartUser = await getOneCartbyUserRepository({ id });
+    const min = 100000000;
+    const max = 999999999;
+    const codeOrder = Math.floor(Math.random() * (max - min + 1)) + min;
+    const createOrder = listCartUser.map((item) => ({
+      codeOrder: codeOrder,
+      quantity: item.quantity,
+      productSizeId: item.productSizeId,
+      userId: item.userId,
+    }));
+    const idCart = listCartUser.map((item) => item.id);
+    const response = await createOrderItemRepository(createOrder, idCart);
     return {
       success: response[1] ? true : false,
       message: response[1]
@@ -35,23 +46,3 @@ export const getOrderItemByUserServices = async ({ id }) => {
     return error;
   }
 };
-// export const updateOrderItemServices = async (id, role) => {
-//   try {
-//     const response = await updateOrderItemRepository(id, role);
-//     return {
-//       message: response > 0 ? "Cập nhật thành công" : "Id không đúng",
-//     };
-//   } catch (error) {
-//     return error;
-//   }
-// };
-// export const deleteOrderItemServices = async ({ id }) => {
-//   try {
-//     const response = await deleteOrderItemRepository({ id });
-//     return {
-//       message: response > 0 ? "Xóa thành công" : "Id không đúng",
-//     };
-//   } catch (error) {
-//     return error;
-//   }
-// };

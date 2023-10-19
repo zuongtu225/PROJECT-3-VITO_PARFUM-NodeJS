@@ -1,9 +1,9 @@
 import db from "../models";
 
 export const createImageRepository = async (src, productId) => {
-  const response = await db.Images.findOrCreate({
-    where: { src: src },
-    defaults: { src: src, productId: productId },
+  const response = await db.Images.create({
+    src: src,
+    productId: productId,
   });
   return response;
 };

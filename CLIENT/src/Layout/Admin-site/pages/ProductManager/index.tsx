@@ -3,26 +3,26 @@ import AdminHeader from "../../components/layout/Header";
 import AdminPagination from "../../components/table/AdminPagination";
 import { useDispatch, useSelector } from "react-redux";
 import { getApiProducts } from "../../../../store/action";
-
 import { AppDispatch } from "../../../../store";
 import ButtonEdit from "../../components/Button/ButtonEdit";
 import { EditModal } from "../../components/modal/EditModal";
 import { deleteProducts } from "../../../../Api";
+import { ToastContainer, toast } from "react-toastify";
 
-// admin right
 const ProductManager = () => {
-  // b1 distpatch lun mới có api
   const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector((state: any) => state?.productReducer?.products);
+
   useEffect(() => {
     dispatch(getApiProducts());
   }, []);
-  const data = useSelector((state: any) => state?.productReducer?.products);
 
   const onDeleteProduct = async (id: number) => {
-    const data = await deleteProducts(id);
-    if ((data as any).status === 200) {
-      dispatch(getApiProducts());
-    }
+    const data: any = await deleteProducts(id);
+    toast.success(data.data.message);
+    setTimeout(async () => {
+      await dispatch(getApiProducts());
+    }, 1500);
   };
 
   return (
@@ -52,15 +52,11 @@ const ProductManager = () => {
                   Tên sản phẩm
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Loại
-                </th>
-                <th scope="col" className="px-6 py-3">
                   Thương Hiệu
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Số lượng
                 </th>
-
                 <th scope="col" className="px-6 py-3">
                   Giá
                 </th>
@@ -80,24 +76,20 @@ const ProductManager = () => {
                     >
                       <img
                         className="w-20 h-100 "
-                        src={item?.images?.url1}
+                        src={item?.images[0]?.src}
                         alt=""
                       />
                     </td>
-                    <td className="px-6 py-4 ">{item.name}</td>
-                    <td className="px-6 py-4">{item?.type[0]?.name}</td>
-                    <td className="px-6 py-4">{item.brand}</td>
-                    <td className="px-6 py-4">{item.quantity}</td>
+                    <td className="px-6 py-4 ">{item.title}</td>
+                    <td className="px-6 py-4">{item.brands?.title}</td>
+                    <td className="px-6 py-4">{item.stock}</td>
                     <td className="px-6 py-4">
                       {item.price?.toLocaleString()}
                     </td>
                     <td className=" py-8 px-5 flex ">
-                      {/* <button className=" bg-green-500 text-red-100 px-5 py-2 font-semibol mr-3 ">
-                        Sửa
-                      </button> */}
-                      <ButtonEdit item={item} />
+                      <ButtonEdit item={item} className="pl-5" />
                       <button
-                        className="bg-red-600   text-red-200 px-5 py-2 font-semibol"
+                        className="bg-red-600 text-red-200 px-5 py-2 font-semibol"
                         onClick={() => onDeleteProduct(item.id)}
                       >
                         Xóa
@@ -107,13 +99,11 @@ const ProductManager = () => {
                 );
               })}
             </tbody>
+            <ToastContainer />
           </table>
-
-          {/* phân trang */}
           <div className="p-4">
             <AdminPagination />
           </div>
-          {/* phân trang */}
         </div>
       </div>
     </div>

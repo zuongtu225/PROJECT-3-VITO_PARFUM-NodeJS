@@ -13,10 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id",
         as: "payments",
       });
+      Orders.belongsTo(models.Users, {
+        foreignKey: "userId",
+        targetKey: "id",
+        as: "users",
+      });
       Orders.hasMany(models.OrderItems, {
-        foreignKey: "orderId",
-        targetKey: "orderId",
-        as: "orderItems",
+        foreignKey: "codeOrder",
+        sourceKey: "codeOrder",
+        as: "orderItem",
       });
     }
   }
@@ -25,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       codeOrder: DataTypes.BIGINT,
       addressId: DataTypes.INTEGER,
       paymentId: DataTypes.INTEGER,
-      sum: DataTypes.BIGINT,
+      userId: DataTypes.BIGINT,
       status: DataTypes.STRING,
     },
     {

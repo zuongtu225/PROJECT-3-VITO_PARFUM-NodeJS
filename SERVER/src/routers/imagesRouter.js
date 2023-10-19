@@ -4,7 +4,7 @@ const controllers = require("../controllers");
 const uploadCloud = require("../middlewares/upload");
 
 imageRouter.post(
-  "/create",
+  "/",
   uploadCloud.array("images", 5),
   controllers.createImageController
 );
@@ -15,6 +15,6 @@ imageRouter.put(
   uploadCloud.single("image"),
   controllers.updateImageController
 );
-imageRouter.delete("/:id", controllers.deleteImageController);
+imageRouter.delete("/", controllers.deleteImageController);
 
 module.exports = imageRouter;

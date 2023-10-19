@@ -22,7 +22,6 @@ const productSlice = createSlice({
       actions.getDetailProduct.fulfilled,
       (state: any, action) => {
         state.productDetail = action.payload;
-        // console.log(55, state.productDetail);
       }
     );
     builder.addCase(actions.getApiProducts.rejected, (state: any, action) => {

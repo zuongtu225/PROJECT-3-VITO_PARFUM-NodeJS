@@ -7,15 +7,13 @@ import { getDetailUser } from "../../../../store/action";
 const AdminExtend = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-   const userDetail: any = useSelector(
+  const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
-   useEffect(() => {
+  useEffect(() => {
     dispatch(getDetailUser());
   }, []);
   useEffect(() => {
-    console.log(userDetail,"<<");
-    
     if (userDetail.roleId === 2) {
       navigate("/");
     }

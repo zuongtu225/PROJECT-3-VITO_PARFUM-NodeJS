@@ -14,7 +14,6 @@ import UsersManager from "./Layout/Admin-site/pages/Users/UsersManager";
 import PageNotFound from "./Layout/NotFound/PageNotFound";
 import DashBoard from "./Layout/Admin-site/pages/DashBoard";
 import CategoryManager from "./Layout/Admin-site/pages/Category";
-import Providers from "./Layout/Admin-site/pages/Providers";
 import BrandsManager from "./Layout/Admin-site/pages/Brands";
 import VoucherManager from "./Layout/Admin-site/pages/Voucher";
 import BlogManager from "./Layout/Admin-site/pages/Blogs";
@@ -48,7 +47,6 @@ function App() {
         <Route path="order" element={<OrderManager />}></Route>
         <Route path="user" element={<UsersManager />}></Route>
         <Route path="category" element={<CategoryManager />}></Route>
-        <Route path="provider" element={<Providers />}></Route>
         <Route path="brand" element={<BrandsManager />}></Route>
         <Route path="voucher" element={<VoucherManager />}></Route>
         <Route path="origin" element={<OriginManager />}></Route>

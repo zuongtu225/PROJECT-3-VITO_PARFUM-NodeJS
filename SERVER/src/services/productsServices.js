@@ -6,12 +6,13 @@ import {
   updateProductRepository,
 } from "../repositories/productsRepository";
 
-export const createProductsServices = async (products) => {
+export const createProductsServices = async (product) => {
   try {
-    const response = await createProductRepository(products);
+    const response = await createProductRepository(product);
     return {
       success: response[1] ? true : false,
       message: response[1] ? "Tạo sản phẩm thành công" : "Sản phẩm đã tồn tại",
+      data: response,
     };
   } catch (error) {
     return error;

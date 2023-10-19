@@ -12,12 +12,14 @@ import { updateUser } from "../../../../Api/user";
 const ProductsDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
   const idProduct = useParams();
+
   useEffect(() => {
-    dispatch(getDetailProduct(idProduct.id));
+    dispatch(getDetailProduct(Number(idProduct.id)));
     dispatch(getDetailUser());
   }, []);
+
   // user
-  const auth: any = localStorage.getItem("auth") || "";
+  // const auth: any = localStorage.getItem("auth") || "";
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
@@ -25,67 +27,19 @@ const ProductsDetail = () => {
   const productDetail = useSelector(
     (state: any) => state?.productReducer?.productDetail
   );
-  const [img, setImg] = useState<string>(productDetail?.images?.url1);
+
+  const [img, setImg] = useState<string>();
   const [quantity, setQuantity] = useState<number>(1);
   //product
 
   //SLIDER
 
   useEffect(() => {
-    setImg(productDetail?.images?.url1);
+    setImg(productDetail?.images[0]?.src);
   }, [productDetail]);
 
-  const handleClick = (url: string) => {
-    setImg(url);
-  };
-  // add to cart
-  const addCart = async () => {
-    if (productDetail.quantity > 0) {
-      let productOder = {
-        idProduct: productDetail.id,
-        // idUser: userDetail.id,
-        oderQty: Number(quantity),
-        ...productDetail,
-      };
-      const productInCart = userDetail?.cart.find(
-        (item: IProduct) => item?.id === productOder?.idProduct
-      );
-
-      // LOGIC NEW
-      // cập nhật cart userDetail
-      if (productInCart) {
-        // Cập nhật cart
-        const updateCart = userDetail.cart.map((item: any) => {
-          // map có thể trả về bất kỳ kiểu dữ liệu nào
-          // map tạo 1 mảng, object mới v
-          if (item.id === productInCart.id) {
-            // tìm thấy thì tăng quantyx
-            return {
-              ...item,
-              oderQty: productInCart.oderQty + Number(quantity),
-            };
-          } else {
-            return item; // nếu ko tìm thấy sp giữ nguyên sp
-          }
-        });
-        // Cập nhật uer
-        const updateUserApi = {
-          ...userDetail,
-          cart: updateCart,
-        };
-        const res = await updateUser(updateUserApi); // cập nhật user API
-        // dispatch(getDetailUser(userDetail.id)); // Lấy lại API
-        toast.success("Thêm vào giỏ thành công");
-      } else {
-        const updateUserDetail = {
-          ...userDetail,
-          cart: [...userDetail.cart, productOder],
-        };
-        const res = await updateUser(updateUserDetail); // đi ko về
-        // dispatch(getDetailUser(userDetail.id)); // kêu về
-        toast.success("Thêm vào giỏ thành công");
-      }
-    }
+  const handleClick = (src: string) => {
+    setImg(src);
   };
 
   return (
@@ -94,8 +48,10 @@ const ProductsDetail = () => {
       {/* <!-- nav-site-tab --> */}
       <div className="home-site-tab container">
         <NavLink to={"/"}>Trang chủ |</NavLink>
-        <NavLink to={"/male"}>Nước Hoa Nam |</NavLink>
-        <b>Narciso Rodriguez For Her Forever </b>
+        <NavLink to={"/male"} className="pl-1">
+          Nước Hoa Nam |
+        </NavLink>
+        <b className="pl-1">{productDetail?.brands?.title}</b>
       </div>
       {/* <!-- card-detail render local--> */}
       <div className="card-wrapper container">
@@ -111,16 +67,26 @@ const ProductsDetail = () => {
             <div className="img-select">
               <div className="img-item">
                 <button
-                  onClick={() => handleClick(`${productDetail.images?.url2}`)}
+                  onClick={() =>
+                    handleClick(`${productDetail?.images[1]?.src}`)
+                  }
                 >
-                  <img src={`${productDetail.images?.url2}`} alt="show image" />
+                  <img
+                    src={`${productDetail?.images[1]?.src}`}
+                    alt="showimage"
+                  />
                 </button>
               </div>
               <div className="img-item">
                 <button
-                  onClick={() => handleClick(`${productDetail.images?.url3}`)}
+                  onClick={() =>
+                    handleClick(`${productDetail?.images[2]?.src}`)
+                  }
                 >
-                  <img src={`${productDetail.images?.url3}`} alt="show image" />
+                  <img
+                    src={`${productDetail?.images[2]?.src}`}
+                    alt="showimage"
+                  />
                 </button>
               </div>
             </div>
@@ -128,7 +94,7 @@ const ProductsDetail = () => {
           {/* <!-- cart main> --> */}
           <div className="card-content">
             <div className="card-content-top">
-              <h3 className="name">{productDetail.name}</h3>
+              <h3 className="name">{productDetail?.name}</h3>
               <div className="rating">
                 <BiSolidStar />
                 <BiSolidStar />
@@ -136,10 +102,10 @@ const ProductsDetail = () => {
                 <BiSolidStar />
                 <FaStarHalfAlt />
                 <p>1 đánh giá</p>
-                <p>{productDetail.gender}</p>
+                <p>{productDetail.category}</p>
               </div>
               <p>
-                Thương hiệu: <b>{productDetail.brand}</b>
+                Thương hiệu: <b>{productDetail?.brand}</b>
               </p>
               <div className="type">
                 <p>Eau de Parfum 100ml</p>
@@ -149,15 +115,15 @@ const ProductsDetail = () => {
               <p>Standard Size</p>
               <div className="standard-size">
                 <div className="size-ml">
-                  <img src={`${productDetail?.images?.url1}`} alt="" />
+                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
                   <p>Eau de Parfum 100ml</p>
                 </div>
                 <div className="size-ml">
-                  <img src={`${productDetail?.images?.url1}`} alt="" />
+                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
                   <p>Eau de Parfum 200ml</p>
                 </div>
                 <div className="size-ml">
-                  <img src={`${productDetail?.images?.url1}`} alt="" />
+                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
                   <p>Eau de Parfum 300ml</p>
                 </div>
               </div>
@@ -181,7 +147,7 @@ const ProductsDetail = () => {
             </p>
           </div>
           {/* <!-- cart right> --> */}
-          {/* {userDetail.id ? (
+          {userDetail?.id ? (
             <div className="product-shopping">
               <p className="last-price">30.000.000 ₫</p>
               <p className="new-price">27.500.000 ₫</p>
@@ -201,9 +167,7 @@ const ProductsDetail = () => {
                   onChange={(e: any) => setQuantity(e.target.value)}
                 />
               </div>
-              <button className="addCart" onClick={addCart}>
-                Thêm vào giỏ hàng
-              </button>
+              <button className="addCart">Thêm vào giỏ hàng</button>
               <button className="buyNow">Mua ngay</button>
               <button className="favorite hide-tablet">
                 <i className="fa-regular fa-heart"></i>
@@ -212,7 +176,7 @@ const ProductsDetail = () => {
             </div>
           ) : (
             <p>Bạn chưa đăng nhập ko thể mua</p>
-          )} */}
+          )}
         </div>
       </div>
     </main>

@@ -12,57 +12,39 @@ import { IProduct } from "../../../../Interface";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store";
 import { getApiProducts } from "../../../../store/action";
+import { updateProduct } from "../../../../Api";
+import { toast } from "react-toastify";
 export function EditModal(props: any) {
   const dispatch = useDispatch<AppDispatch>();
+
   const [open, setOpen] = useState(props.open);
+  const [productUpdate, setProductUpdate] = useState<IProduct>();
   useEffect(() => {
     setOpen(props.open);
   }, [props.open]);
   const ClickClose = () => {
     props.handleClose(false);
   };
-
-  const [productUpdate, setProductUpdate] = useState<IProduct>();
   const handleUpdate = async () => {
     switch (props.title) {
       case "PRODUCTS":
-        const data = await axios.put(
-          `http://localhost:5000/products/${productUpdate?.id}`,
-          productUpdate
-        );
-        if (data.status === 200) {
-          alert("succeed");
-          dispatch(getApiProducts());
+        const responseProduct: any = await updateProduct(productUpdate);
+        console.log(responseProduct, "responseProduct<<<");
+        if (responseProduct.status === 200) {
+          toast.success(responseProduct.data.message);
           props.handleClose(false);
+          setTimeout(() => {
+            dispatch(getApiProducts());
+          }, 2000);
         } else {
-          alert("failed");
+          props.handleClose(false);
+          toast.error(responseProduct.data.message);
         }
         break;
-      //     // case "PROVIDERS":
-      //     //   axios.post("http://localhost:5000/providers", provider);
-      //     //   break;
-      //     // case "BRANDS":
-      //     //   axios.post("http://localhost:5000/brands", brand);
-      //     //   break;
-      //     // case "PAYMENT":
-      //     //   axios.post("http://localhost:5000/payments", payment);
-      //     //   break;
-      //     // case "VOUCHERS":
-      //     //   axios.post("http://localhost:5000/vouchers", voucher);
-      //     //   break;
-      //     // case "ORIGINS":
-      //     //   axios.post("http://localhost:5000/origins", origin);
-      //     //   break;
-      //     // case "CATEGORIES":
-      //     //   axios.post("http://localhost:5000/category", category);
-      //     //   break;
-      //     // case "BLOGS":
-      //     //   axios.post("http://localhost:5000/blogs", blog);
     }
   };
-  const buttonCofirm = (ii: any) => {
-    // nhận New product Update
-    setProductUpdate(ii);
+  const handleGetProduct = (productUpdate: any) => {
+    setProductUpdate(productUpdate);
   };
   return (
     <div>
@@ -71,7 +53,7 @@ export function EditModal(props: any) {
         <DialogBody divider>
           {props.title === "PRODUCTS" && (
             <div>
-              <EditProductForm buttonCofirm={buttonCofirm} />
+              <EditProductForm handleGetProduct={handleGetProduct} />
             </div>
           )}
         </DialogBody>

@@ -1,8 +1,6 @@
 // BÊN FILE API THÌ  XỬ LÝ LOGIC CRUD
 import axios from "axios";
-import React from "react";
 
-// Thêm đơn hàng mới
 export const addApiOrders = (order: any) => {
   return axios
     .post(`http://localhost:5000/orders`, order)
@@ -14,7 +12,7 @@ export const addApiOrders = (order: any) => {
     });
 };
 
-// Thêm đơn hàng mới
+
 export const deleteOrder = (order: any) => {
   return axios
     .delete(`http://localhost:5000/orders/${order.id}`, order)
@@ -25,7 +23,7 @@ export const deleteOrder = (order: any) => {
       console.error("Error!!!!", error);
     });
 };
-// Thêm đơn hàng mới
+
 export const updateOrderApi = (order: any) => {
   return axios
     .put(`http://localhost:5000/orders/${order.id}`, order)

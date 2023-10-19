@@ -1,32 +1,38 @@
+import { getAllOrderItemRepository } from "../repositories/orderItemsRepository";
 import {
   createOrderRepository,
   getAllOrderRepository,
-  getOrderByUserRepository,
   updateOrderRepository,
 } from "../repositories/ordersRepository";
-export const createOrderServices = async (data) => {
+
+export const createOrderServices = async (id, data) => {
   try {
-    const response = await createOrderRepository(data);
-    return {
-      success: response[1] ? true : false,
-      message: response[1] ? "Tạo Order thành công" : "Order đã tồn tại",
-    };
+    const orderItems = await getAllOrderItemRepository();
+    const uniqueCodeOrders = [
+      ...new Set(orderItems.map((item) => item.codeOrder)),
+    ];
+    for (const item of uniqueCodeOrders) {
+      const createOrder = {
+        codeOrder: item,
+        addressId: +data.addressId,
+        paymentId: +data.paymentId,
+        userId: id,
+        status: "Pending",
+      };
+      const response = await createOrderRepository(createOrder);
+      return {
+        success: response[1] === true ? true : false,
+        data:
+          response[1] === true ? "Tạo đơn thành công" : "Đơn hàng đã tồn tại",
+      };
+    }
   } catch (error) {
     return error;
   }
 };
-
 export const getAllOrderServices = async () => {
   try {
     const data = await getAllOrderRepository();
-    return data;
-  } catch (error) {
-    return error;
-  }
-};
-export const getOrderByUserServices = async ({ id }) => {
-  try {
-    const data = await getOrderByUserRepository({ id });
     return data;
   } catch (error) {
     return error;

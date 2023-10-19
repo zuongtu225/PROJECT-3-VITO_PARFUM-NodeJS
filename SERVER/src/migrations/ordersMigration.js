@@ -21,8 +21,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      sum: {
-        type: Sequelize.BIGINT,
+      userId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       status: {

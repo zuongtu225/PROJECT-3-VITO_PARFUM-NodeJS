@@ -4,11 +4,7 @@ const controllers = require("../controllers");
 const checkAuthentication = require("../middlewares/verify_token");
 
 cartRouter.get("/", controllers.getAllCartController);
-cartRouter.post(
-  "/create",
-  [checkAuthentication],
-  controllers.createCartController
-);
+cartRouter.post("/", [checkAuthentication], controllers.createCartController);
 cartRouter.get(
   "/detail",
   [checkAuthentication],

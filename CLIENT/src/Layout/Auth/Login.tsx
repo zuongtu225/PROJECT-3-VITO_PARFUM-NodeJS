@@ -7,6 +7,7 @@ import { getApiUsers } from "../../store/action";
 import { ToastContainer, toast } from "react-toastify";
 import CustomerHeader from "../Customer-site/components/layout/Header/CustomerHeader";
 import axios from "axios";
+import { loginAPI } from "../../Api/auth";
 
 const Login = () => {
   const data = useSelector((state: any) => state?.userReducer?.users);
@@ -22,24 +23,16 @@ const Login = () => {
     e.preventDefault();
     const dataUser = {
       email,
-      password
-    }
-    const response = await axios.post("http://localhost:9000/auth/login", dataUser);
+      password,
+    };
+    const response = await loginAPI(dataUser);
     const newError = {
       isError: false,
       emailMSG: "",
     };
-
     if (response.data.success === false) {
       newError.isError = true;
       newError.emailMSG = "Email hoặc mật khẩu không đúng";
-    }
-
-    const regxEmail =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!email.match(regxEmail)) {
-      newError.isError = true;
-      newError.emailMSG = "Email không đúng định dạng - Vui lòng nhập lại";
     }
     setError(newError);
     // role = 1 admin, role = 2 user
@@ -67,12 +60,12 @@ const Login = () => {
       <CustomerHeader />
       <div className="bg-blue-200 flex">
         <div className="flex-col flex ml-auto mr-auto items-center w-full lg:w-2/3 md:w-3/5">
-          <h1 className="font-bold text-2xl my-10 text-white"> Đăng Nhập</h1>
+          <h1 className="font-bold text-2xl my-10 text-black"> Đăng Nhập</h1>
           <form
             onSubmit={(e) => submit(e)}
             className="mt-2 flex flex-col lg:w-1/2 w-8/12"
           >
-            {error?.isError == true && (
+            {error?.isError === true && (
               <p className="text-black-700">{error.emailMSG} </p>
             )}
             <div className="flex flex-wrap items-stretch w-full mb-4 relative h-15 bg-white items-center rounded mb-6 pr-10">
@@ -88,7 +81,7 @@ const Login = () => {
                 placeholder="Email"
               />
             </div>
-            {error?.isError == true && (
+            {error?.isError === true && (
               <p className="text-black-700">{error.passwordMSG} </p>
             )}
 
@@ -115,11 +108,11 @@ const Login = () => {
             )}
             <NavLink
               to={"/auth/register"}
-              className="text-base text-white font-semibold text-right font-roboto leading-normal hover:underline mb-6"
+              className="text-base text-black font-semibold text-right font-roboto leading-normal hover:underline mb-6"
             >
               Đăng ký tài khoản
             </NavLink>
-            <button className="bg-blue-400 py-4 text-center px-17 md:px-12 md:py-4 text-white rounded leading-tight text-xl md:text-base font-sans mt-4 mb-20">
+            <button className="bg-blue-400 py-4 text-center px-17 md:px-12 md:py-4 text-black rounded leading-tight text-xl md:text-base font-sans mt-4 mb-20">
               Đăng Nhập
             </button>
           </form>

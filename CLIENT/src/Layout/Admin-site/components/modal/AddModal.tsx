@@ -8,52 +8,100 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import ProductFormAdd from "./FormAdd/AddProductForm";
+import { createProduct } from "../../../../Api";
+import { createImages } from "../../../../Api/images";
+import { IBrand, IProduct } from "../../../../Interface";
+import AddBrandForm from "./FormAdd/AddBrandForm";
+import { createBrand } from "../../../../Api/brands";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../store";
+import {
+  getApiBrands,
+  getApiCategories,
+  getApiProducts,
+} from "../../../../store/action";
+import { ToastContainer, toast } from "react-toastify";
+import { createCategory } from "../../../../Api/categories";
+import AddCategoryForm from "./FormAdd/AddCategoryForm";
 
-// b4 Hiện HỘP MODAL lên rồi [ Hiện lên tùy theo title props từ các Pages ]
-// HỘP MODAL BAO GỒM NÚT ADD CHUNG VÀ CÁC FORM RIÊNG
-export function AddModal(props: any) {
-  // props bây giờ gồm: title, open, handleClose
+export function AddModal(props: any): any {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [product, setProduct] = useState<any>();
+  const [category, setCategory] = useState<any>();
+  const [images, setImages] = useState<any>();
   const [provider, setProvider] = useState<any>();
   const [brand, setBrand] = useState<any>();
   const [origin, setOrigin] = useState<any>();
   const [voucher, setVoucher] = useState<any>();
   const [blog, setBlog] = useState<any>();
   const [payment, setPayment] = useState<any>();
-  const [category, setCategory] = useState<any>();
   const [open, setOpen] = useState(props.open);
-  // b5 Tạo biến open mới gán giá trị open cũ
 
   useEffect(() => {
     setOpen(props.open);
   }, [props.open]);
-  // b6 Dùng useEffect để lun cập nhật open mới
 
   const ClickClose = () => {
     props.handleClose(false);
   };
-  // b7 Khi nhấn close thì truyền vào và set lại open ở Header là false [tắt]
 
-  const handleData = (data: any) => {
+  const handleGetProduct = (data: IProduct, formData: any) => {
     setProduct(data);
+    setImages(formData);
   };
+  const handleGetBrand = (data: IBrand) => {
+    setBrand({ title: data });
+  };
+  const handleGetCategory = (data: IBrand) => {
+    setCategory({ title: data });
+  };
+  // THÊM MỚI
   const handleAdd = async () => {
     switch (props.title) {
       case "PRODUCTS":
-        const data = await axios.post(
-          "http://localhost:5000/products",
-          product
-        );
-        if (data.status === 201) {
-          alert("suces");
+        const imageData = { id: product.id, images };
+        const formData = new FormData();
+        for (let i of Object.entries(imageData)) formData.append(i[0], i[1]);
+        for (let img of images) formData.append("images", img);
+        const responseProduct: any = await createProduct(product);
+        await createImages(formData);
+        if (responseProduct.data.success === true) {
           props.handleClose(false);
+          toast.success(responseProduct.data.message);
+          setTimeout(() => {
+            dispatch(getApiProducts());
+          }, 2000);
+        } else {
+          props.handleClose(false);
+          toast.error(responseProduct.data.message);
         }
         break;
-      case "PROVIDERS":
-        axios.post("http://localhost:5000/providers", provider);
-        break;
       case "BRANDS":
-        axios.post("http://localhost:5000/brands", brand);
+        const responseBrand: any = await createBrand(brand);
+        if (responseBrand.data.success === true) {
+          props.handleClose(false);
+          toast.success(responseBrand.data.message);
+          setTimeout(() => {
+            dispatch(getApiBrands());
+          }, 2000);
+        } else {
+          props.handleClose(false);
+          toast.error(responseBrand.data.message);
+        }
+        break;
+      case "CATEGORY":
+        const responseCategory: any = await createCategory(category);
+        if (responseCategory.data.success === true) {
+          props.handleClose(false);
+          toast.success(responseCategory.data.message);
+          setTimeout(() => {
+            dispatch(getApiCategories());
+          }, 2000);
+        } else {
+          props.handleClose(false);
+          toast.error(responseCategory.data.message);
+        }
         break;
       case "PAYMENT":
         axios.post("http://localhost:5000/payments", payment);
@@ -61,14 +109,6 @@ export function AddModal(props: any) {
       case "VOUCHERS":
         axios.post("http://localhost:5000/vouchers", voucher);
         break;
-      case "ORIGINS":
-        axios.post("http://localhost:5000/origins", origin);
-        break;
-      case "CATEGORIES":
-        axios.post("http://localhost:5000/category", category);
-        break;
-      case "BLOGS":
-        axios.post("http://localhost:5000/blogs", blog);
     }
   };
 
@@ -77,20 +117,23 @@ export function AddModal(props: any) {
     // Submit chung
     <div className="formAdd">
       <Dialog open={open} handler={ClickClose}>
-        {/* open={open} handler={dlerClose} là một phần của thư viện @material-tailwind/react.
-         => true khi bạn muốn hiển thị hộp thoại và false khi bạn muốn ẩn nó.
-        => Khi click thuộc tính handler sẽ nhận được 1 HÀM ClickClose để xử lý sự kiện đóng hộp 
-        */}
         <DialogHeader> Form Thêm </DialogHeader>
-        {/* b8: <DialogBody> để chứa các FORM của hộp thoại modal theo title  */}
         <DialogBody divider>
-          {/* toán tử && nếu ĐIỀU KIỆN ĐÚNG thì Thực Thi Khối Mã, nếu sai thì không thực thi */}
           {props.title === "PRODUCTS" && (
             <div>
-              <ProductFormAdd product={product} handleData={handleData} />
+              <ProductFormAdd handleGetProduct={handleGetProduct} />
             </div>
           )}
-          {props.title === "brand" && <div>brand</div>}
+          {props.title === "BRANDS" && (
+            <div>
+              <AddBrandForm handleGetBrand={handleGetBrand} />
+            </div>
+          )}
+          {props.title === "CATEGORY" && (
+            <div>
+              <AddCategoryForm handleGetCategory={handleGetCategory} />
+            </div>
+          )}
         </DialogBody>
         <DialogFooter>
           <Button
@@ -101,12 +144,12 @@ export function AddModal(props: any) {
           >
             <span>Cancel</span>
           </Button>
-
           <Button color="green" onClick={handleAdd}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
       </Dialog>
+      <ToastContainer />
     </div>
   );
 }

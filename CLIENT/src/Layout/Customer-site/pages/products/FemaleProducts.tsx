@@ -12,7 +12,7 @@ import { IProduct } from "../../../../Interface";
 import { NavLink, useNavigate } from "react-router-dom";
 const MaleProducts = () => {
   const auth: any = localStorage.getItem("auth") || "";
-    const userDetail: any = useSelector(
+  const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
   const dispatch = useDispatch<AppDispatch>();
@@ -30,7 +30,6 @@ const MaleProducts = () => {
   const [brands, setBrands] = useState<any>(data?.brandReducer?.brands);
   const [origins, setOrigins] = useState<any>(data?.originReducer?.origins);
   const [products, setProducts] = useState<any>(data?.productReducer?.products);
-  const male = products?.filter((item: IProduct) => item.gender === "female");
 
   useEffect(() => {
     setBrands(data?.brandReducer?.brands);
@@ -122,7 +121,7 @@ const MaleProducts = () => {
               </div>
             </div>
             <div className="product-content-main">
-              {male?.map((item: IProduct) => {
+              {/* {male?.map((item: IProduct) => {
                 return (
                   <div className="product">
                     <div className="product">
@@ -160,7 +159,7 @@ const MaleProducts = () => {
                     </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
         </div>

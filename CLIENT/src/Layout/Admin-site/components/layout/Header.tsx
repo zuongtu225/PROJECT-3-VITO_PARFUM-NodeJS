@@ -1,10 +1,10 @@
 import { Button } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
-import { AddModal } from "../modal/AddModal";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../store";
 import { getDetailUser } from "../../../../store/action";
+import { AddModal } from "../modal/AddModal";
 
 interface props {
   title: string;
@@ -15,18 +15,14 @@ const AdminHeader = (props: props) => {
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
-  console.log(userDetail,"<<");
-  
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    dispatch(getDetailUser()); 
+    dispatch(getDetailUser());
   }, []);
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => {
     setOpen(!open);
   };
-
   const handleClose = (open: boolean) => {
     setOpen(open);
   };

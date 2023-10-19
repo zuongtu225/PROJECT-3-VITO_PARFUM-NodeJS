@@ -4,7 +4,7 @@ export const createImageController = async (req, res) => {
   try {
     const data = req?.files?.map((el) => ({
       src: el.path,
-      ...req.body,
+      productId: +req.body.id,
     }));
     const response = await services.createImageService(data);
     return res.status(200).json(response);
@@ -41,11 +41,12 @@ export const updateImageController = async (req, res) => {
   }
 };
 export const deleteImageController = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const response = await services.deleteImageService({ id });
-    return res.status(200).json(response);
-  } catch (error) {
-    return handleError.internalServerError(res);
-  }
+  console.log(req.body);
+  // try {
+  //   const { id } = req.params;
+  //   const response = await services.deleteImageService({ id });
+  //   return res.status(200).json(response);
+  // } catch (error) {
+  //   return handleError.internalServerError(res);
+  // }
 };

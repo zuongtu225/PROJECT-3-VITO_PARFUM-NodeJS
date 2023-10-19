@@ -17,6 +17,7 @@ const CustomerHeader = () => {
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
+
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getDetailUser());
@@ -24,10 +25,12 @@ const CustomerHeader = () => {
 
   //log out
   const nagivate = useNavigate();
-  const logout = () => {
+  const logout = async () => {
     localStorage.removeItem("auth");
+    await dispatch(getDetailUser()); // phải đợi khi chọc đến api cái đã !!!bug
     nagivate("/auth/login");
   };
+
   // go to cart
   const navigate = useNavigate();
   const cartPage = () => {
@@ -66,7 +69,7 @@ const CustomerHeader = () => {
           </li>
 
           <li>
-            <AiOutlineInstagram className="w-4 h-4"  />
+            <AiOutlineInstagram className="w-4 h-4" />
           </li>
         </ul>
       </nav>
@@ -96,20 +99,20 @@ const CustomerHeader = () => {
           <div className="account hide-mobile ">
             <div id="loginAccount " className="w-100px">
               {userDetail?.id ? (
-                // có id coi như có login
                 <div className="flex gap-3 items-center">
-                  {userDetail.avatar !== "" &&
-                    <img  
-                    onClick={profile}
-                    style={{
-                      objectFit: "cover",
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                    }}
-                    src={`${userDetail?.avatar}`}
-                    alt=""
-                  />}
+                  {userDetail.avatar !== "" && (
+                    <img
+                      onClick={profile}
+                      style={{
+                        objectFit: "cover",
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                      }}
+                      src={`${userDetail?.avatar}`}
+                      alt=""
+                    />
+                  )}
                   <p onClick={profile}>
                     {userDetail?.email?.slice(
                       0,
@@ -122,7 +125,10 @@ const CustomerHeader = () => {
                 </div>
               ) : (
                 <div className="flex">
-                  <NavLink to={"/auth/login"} className="hide-mobile hide-tablet">
+                  <NavLink
+                    to={"/auth/login"}
+                    className="hide-mobile hide-tablet"
+                  >
                     Đăng nhập
                   </NavLink>
                   <PiUserSquareLight className="w-8 h-6" />

@@ -1,13 +1,10 @@
 import axios from "axios";
+import { IProduct } from "../Interface";
 
 // create
-
-// get all
-
-// get detail
-export const getApiDetailProduct = (id: any) => {
+export const createProduct = (newProduct: IProduct) => {
   return axios
-    .get(`http://localhost:5000/products/${id}`)
+    .post(`http://localhost:9000/products`,newProduct)
     .then((response) => {
       return response;
     })
@@ -15,12 +12,23 @@ export const getApiDetailProduct = (id: any) => {
       console.error("Error!!!!", error);
     });
 };
-// put
 
 // delete
-export const deleteProducts = (id: any) => {
+export const updateProduct = (productUpdate: any) => {
+  return axios.put(
+          `http://localhost:9000/products/${productUpdate.id}`,
+          productUpdate
+        )
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error!!!!", error);
+    });
+};
+export const deleteProducts = (id: number) => {
   return axios
-    .delete(`http://localhost:5000/products/${id}`)
+    .delete(`http://localhost:9000/products/${id}`)
     .then((response) => {
       return response;
     })

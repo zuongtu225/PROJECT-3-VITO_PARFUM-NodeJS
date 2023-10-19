@@ -53,7 +53,7 @@ export const getOneCartbyUserRepository = async ({ id }) => {
       },
     ],
     attributes: {
-      exclude: ["userId", "productSizeId", "createdAt", "updatedAt"],
+      exclude: ["createdAt", "updatedAt"],
     },
   });
   return data;

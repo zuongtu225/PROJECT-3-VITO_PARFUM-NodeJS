@@ -9,7 +9,7 @@ import { Carousel } from "@material-tailwind/react";
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const auth: any = localStorage.getItem("auth") || "";
-    const userDetail: any = useSelector(
+  const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
   const dataProduct = useSelector(
@@ -20,8 +20,8 @@ const Home = () => {
   }, []);
 
   const [products, setProducts] = useState<any>(dataProduct);
-  const bestSeller = products?.slice(10, 40);
-  const newArrivals = products?.slice(20, 40);
+  // const bestSeller = products?.slice(10, 40);
+  // const newArrivals = products?.slice(20, 40);
 
   useEffect(() => {
     dispatch(getDetailUser());
@@ -31,15 +31,12 @@ const Home = () => {
     setProducts(dataProduct);
   }, [dataProduct]);
 
-  // get id và go to page detail
   const navigate = useNavigate();
   const productDetail = (id: number) => {
-    // gửi id đến action để action có thể get product trong axios
     navigate(`/detail/${id}`);
   };
   return (
     <div>
-      {/* slider */}
       <Carousel
         className="rounded-xl"
         navigation={({ setActiveIndex, activeIndex, length }) => (
@@ -58,21 +55,20 @@ const Home = () => {
       >
         <img
           src="https://piger.vn/wp-content/uploads/2023/04/bn1-1.jpg"
-          alt="image 1"
+          alt="image1"
           className="h-[530px] w-full object-cover"
         />
         <img
           src="https://theme.hstatic.net/1000340570/1000964732/14/slideshow_1.jpg?v=2664"
-          alt="image 2"
+          alt="image2"
           className="h-[530px] w-full object-cover"
         />
         <img
-          alt="image 3"
+          alt="image3"
           src="https://piger.vn/wp-content/uploads/2023/04/bn2-1.jpg"
           className="h-[530px] w-full object-cover"
         />
       </Carousel>
-      {/* slider  */}
 
       {/* _________  Hàng mới về _________start */}
       <div className="section-header container flex justify-between py-2">
@@ -84,29 +80,34 @@ const Home = () => {
         </NavLink>
       </div>
       <div className="newArrivals container">
-        {newArrivals?.map((item: any) => {
+        {products?.map((item: any) => {
           // !!!! ko đặt ? thì map lun sẽ undefined bắt buọc phải đặt dấu ?
           return (
             <div key={item.id} className="product">
               <div className="buy-now-container">
                 <img
                   onClick={() => productDetail(item.id)}
-                  src={`${item.images.url1}`}
+                  src={`${item?.images[0]?.src}`}
                   alt=""
                 />
                 <button>MUA NGAY</button>
               </div>
               <div className="content-product">
-                <p className="brand-title-product">{item.brand}</p>
+                <p
+                  className="brand-title-product"
+                  onClick={() => productDetail(item.id)}
+                >
+                  {item?.brands?.title}
+                </p>
                 <p
                   className="name-product"
                   onClick={() => productDetail(item.id)}
                 >
-                  {item.name}
+                  {item.title}
                 </p>
                 <div className="price-cart-add">
-                  <p className="price-product">
-                    {item.price.toLocaleString()} đ
+                  <p className="price-product pl-7">
+                    {item?.price?.toLocaleString()} đ
                   </p>
                   {userDetail?.id ? (
                     <BsCartPlus
@@ -178,14 +179,14 @@ const Home = () => {
         </NavLink>
       </div>
       <div className="best-seller container">
-        {bestSeller?.map((item: any) => {
+        {products?.map((item: any) => {
           // !!!! ko đặt ? thì map lun sẽ undefined bắt buọc phải đặt dấu ?
           return (
             <div key={item.id} className="product">
               <div className="buy-now-container">
                 <img
                   onClick={() => productDetail(item.id)}
-                  src={`${item.images.url1}`}
+                  src={`${item?.images[0]?.src}`}
                   alt=""
                 />
                 <button>MUA NGAY</button>
@@ -195,17 +196,17 @@ const Home = () => {
                   className="brand-title-product"
                   onClick={() => productDetail(item.id)}
                 >
-                  {item.brand}
+                  {item?.brands?.title}
                 </p>
                 <p
                   className="name-product"
                   onClick={() => productDetail(item.id)}
                 >
-                  {item.name}
+                  {item.title}
                 </p>
                 <div className="price-cart-add">
-                  <p className="price-product pl-3">
-                    {item.price.toLocaleString()} đ
+                  <p className="price-product pl-7">
+                    {item?.price?.toLocaleString()} đ
                   </p>
                   {userDetail?.id ? (
                     <BsCartPlus

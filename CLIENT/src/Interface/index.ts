@@ -18,33 +18,28 @@ interface IComments {
   idUser: string;
   nameUser: string;
 }
-interface IType {
+export interface IBrand {
   id: number;
-  name: string;
-  price: number;
+  title: string;
+}
+export interface ICategory {
+  id: number;
+  title: string;
+}
+export interface ISize {
+  id: number;
+  percent: number;
+  size: string;
 }
 export interface IProduct {
   id: number;
+  title: string;
   brand: string;
-  name: string;
-  gender: string;
-  images: {
-    url1: string;
-    url2: string;
-    url3: string;
-  };
-  type: IType[];
-  provider: string;
-  quantity: number;
-  comments: IComments[];
+  size: string;
+  category: string;
+  stock: number;
   price: number;
-  origin: string;
-  discount: number;
-  rating: number;
-  isDealFragrant: boolean;
-  isMini: boolean;
-  isNew: boolean;
-  isBestSeller: boolean;
+  images: [];
   description: string;
 }
 export interface IStateProduct {
@@ -57,13 +52,8 @@ export interface ICartProduct {
   id: number;
   brand: string;
   name: string;
-  gender: string;
-  images: {
-    url1: string;
-    url2: string;
-    url3: string;
-  };
-  type: IType[];
+  category: string;
+  images:  [];
   provider: string;
   quantity: number;
   comments: IComments[];
@@ -79,12 +69,12 @@ export interface ICartProduct {
 }
 export interface IVisa {
   id: number;
-  code: string; // Mã bảo mật CVV/CVC của thẻ Visa
+  code: string; 
   name: string;
   cvc: number;
-  cardNumber: Number; // Số thẻ Visa (phải được mã hóa)
-  issuer: string; // Ngân hàng phát hành thẻ Visa
-  isActive: boolean; // Trạng thái hoạt động của thẻ (true hoặc false)
+  cardNumber: Number; 
+  issuer: string; 
+  isActive: boolean; 
 }
 export interface IUser {
   id: number;
@@ -106,7 +96,7 @@ export interface IBank {
   name: string;
   code: string;
   type: string;
-  exp: string; // tháng năm hết hạn
+  exp: string; 
   cvc: number;
   wallet: number;
 }
@@ -121,9 +111,3 @@ export interface IOder {
   codeOrder: number;
   status: string;
 }
-
-// export interface IResponse { 
-//   success: boolean;
-//   message: string;
-//   role:number
-// }

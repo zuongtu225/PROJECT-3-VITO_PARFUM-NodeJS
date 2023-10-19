@@ -13,9 +13,8 @@ const ButtonEdit = (props: any) => {
     setOpen(open);
   };
 
-  const handleEdit = (id: number) => {
-    console.log(" id =>", id);
-    dispatch(getDetailProduct(id));
+  const handleEdit = async (id: number) => {
+    await dispatch(getDetailProduct(id));
     setOpen(!open);
   };
 

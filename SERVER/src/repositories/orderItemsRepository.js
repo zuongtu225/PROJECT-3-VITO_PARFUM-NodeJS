@@ -1,60 +1,38 @@
 import db from "../models";
-export const createOrderItemRepository = async (data) => {
-  const { cartId, orderId } = data;
-  const response = await db.OrderItems.findOrCreate({
-    where: { cartId },
-    defaults: { cartId, orderId },
-  });
+export const createOrderItemRepository = async (createOrder, idCart) => {
+  const response = await db.OrderItems.bulkCreate(createOrder);
   return response;
 };
 export const getAllOrderItemRepository = async () => {
   const data = await db.OrderItems.findAll({
-    // include: [
-    //   {
-    //     model: db.Carts,
-    //     as: "carts",
-    //     attributes: {
-    //       exclude: ["createdAt", "updatedAt"],
-    //     },
-    //   },
-    // ],
-    attributes: {
-      exclude: ["createdAt", "updatedAt"],
-    },
-  });
-  return data;
-};
-
-export const getOrderItemByUserRepository = async ({ id }) => {
-  const data = await db.OrderItems.findAll({
     include: [
       {
-        model: db.Carts,
-        as: "carts",
-        where: {
-          userId: id,
-        },
+        model: db.ProductSizes,
+        as: "productSizes",
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt"],
+          exclude: [, "createdAt", "updatedAt"],
         },
+        include: [
+          {
+            model: db.Products,
+            as: "products",
+            attributes: {
+              exclude: ["productId", , "createdAt", "updatedAt"],
+            },
+          },
+          {
+            model: db.Sizes,
+            as: "sizes",
+            attributes: {
+              exclude: ["sizeId", , "createdAt", "updatedAt"],
+            },
+          },
+        ],
       },
     ],
     attributes: {
-      exclude: ["createdAt", "updatedAt"],
+      exclude: ["productSizeId", "createdAt", "updatedAt"],
     },
   });
   return data;
 };
-
-// export const updateOrderItemRepository = async (id, body) => {
-//   const response = await db.OrderItems.update(body, {
-//     where: { id },
-//   });
-//   return response;
-// };
-// export const deleteOrderItemRepository = async ({ id }) => {
-//   const response = await db.OrderItems.destroy({
-//     where: { id },
-//   });
-//   return response;
-// };

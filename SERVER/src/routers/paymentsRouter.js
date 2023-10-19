@@ -3,7 +3,7 @@ const paymentRouter = express.Router();
 const controllers = require("../controllers");
 
 paymentRouter.get("/", controllers.getAllPaymentsController);
-paymentRouter.post("/create", controllers.createPaymentController);
+paymentRouter.post("/", controllers.createPaymentController);
 paymentRouter.get("/:id", controllers.getOnePaymentController);
 paymentRouter.put("/:id", controllers.updatePaymentController);
 paymentRouter.delete("/:id", controllers.deletePaymentController);

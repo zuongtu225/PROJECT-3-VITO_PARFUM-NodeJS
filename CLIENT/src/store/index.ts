@@ -7,12 +7,16 @@ import { useDispatch } from "react-redux";
 import bankSlice from "./Slices/bankSlice";
 import orderSlice from "./Slices/orderSlice";
 import historyOrderSlice from "./Slices/historyOrders";
+import categorySlice from "./Slices/categorySlice";
+import sizesSlice from "./Slices/sizesSlice";
 
 const store = configureStore({
   reducer: {
     productReducer: productSlice,
-    userReducer: userSlice,
     brandReducer: brandSlice,
+    categoryReducer: categorySlice,
+    sizeReducer: sizesSlice,
+    userReducer: userSlice,
     originReducer: originSlice,
     bankReducer: bankSlice,
     orderReducer: orderSlice,

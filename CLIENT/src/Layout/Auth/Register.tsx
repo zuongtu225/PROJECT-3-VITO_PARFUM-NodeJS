@@ -7,6 +7,7 @@ import { AppDispatch } from "../../store";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import CustomerHeader from "../Customer-site/components/layout/Header/CustomerHeader";
+import { registerAPI } from "../../Api/auth";
 const Register = () => {
   const data = useSelector((state: any) => state?.userReducer?.users);
   const dispatch = useDispatch<AppDispatch>();
@@ -28,19 +29,19 @@ const Register = () => {
       confirmPassword: confirmPassword,
     };
     const maxId = Math.max(...data.map((item: any) => item.id));
-    const newUser= {
-      id: data.length === 0 ? 1: maxId + 1,
+    const newUser = {
+      id: data.length === 0 ? 1 : maxId + 1,
       email: email,
       password: password,
       avatar: "",
       firstName: "",
-      lastName:"",
-      role: data.length === 0 ? 1 :2,
+      lastName: "",
+      role: data.length === 0 ? 1 : 2,
       status: true,
-    }
+    };
     const checkError = validate(checkUser);
     if (checkError.isError === false) {
-      const response = await axios.post("http://localhost:9000/auth/register", newUser);
+      const response = await registerAPI(newUser);
       if (response.status === 200) {
         toast.success("Đăng Ký Thành Công");
         setTimeout(() => {
@@ -89,7 +90,7 @@ const Register = () => {
       <CustomerHeader />
       <div className="bg-blue-200 flex">
         <div className="flex-col flex ml-auto mr-auto items-center w-full lg:w-2/3 md:w-3/5">
-          <h1 className="font-bold text-2xl my-10 text-white"> Đăng Ký</h1>
+          <h1 className="font-bold text-2xl my-10 text-black"> Đăng Ký</h1>
           <form
             onSubmit={(e) => register(e)}
             className="mt-2 flex flex-col lg:w-1/2 w-8/12"
@@ -162,11 +163,11 @@ const Register = () => {
             )}
             <NavLink
               to={"/auth/login"}
-              className="text-base text-white text-right font-roboto leading-normal hover:underline mb-6"
+              className="text-base text-black text-right font-roboto leading-normal hover:underline mb-6"
             >
               Đăng nhập
             </NavLink>
-            <button className="bg-blue-400 py-4 text-center px-17 md:px-12 md:py-4 text-white rounded leading-tight text-xl md:text-base font-sans mt-4 mb-20">
+            <button className="bg-blue-400 py-4 text-center  px-17 md:px-12 md:py-4 text-black rounded leading-tight text-xl md:text-base font-sans mt-4 mb-20">
               Đăng Ký
             </button>
           </form>

@@ -33,6 +33,7 @@ const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const auth: any = localStorage.getItem("auth") || "";
+
   const listBanks: any = useSelector((state: any) => state?.bankReducer?.banks);
   const [bank, setBank] = useState();
   const [code, setCode] = useState();
@@ -49,7 +50,7 @@ const Profile = () => {
   useEffect(() => {
     dispatch(getApiBank());
     dispatch(getDetailUser());
-  }, [auth]);
+  }, []);
 
   const addVisa = async (e: any) => {
     e.preventDefault();
@@ -73,74 +74,74 @@ const Profile = () => {
       ...userDetail,
       // avatar: avatar,
       firstName,
-      lastName
+      lastName,
     };
-    // console.log(newUserAvatar,"<<<");
-    // const file = avatar.slice( 12);
     const res = await updateUser(newUserAvatar);
     setOpen(false);
   };
   return (
     <>
       {/* model */}
-      <Dialog  open={open} handler={ClickClose}>
+      <Dialog open={open} handler={ClickClose}>
         <DialogHeader>
           Cập nhật thông tin cá nhân{" "}
           <LiaUserEditSolid className="text-light-blue-600 ml-5" />
         </DialogHeader>
-   <form encType="multipart/form-data">
-  <div className="mb-6">
-     <label
-      htmlFor="Avatar"
-      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >Avatar</label>
-    <input
+        <form encType="multipart/form-data">
+          <div className="mb-6">
+            <label
+              htmlFor="Avatar"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Avatar
+            </label>
+            <input
               type="file"
               className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
               onChange={(e: any) => {
-                const file = e.target.value; 
+                const file = e.target.value;
                 setAvatar(file);
               }}
-    />
-  </div>
-  <div className="mb-6">
+            />
+          </div>
+          <div className="mb-6">
             <input
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFirstName(e.target.value)
-            }
-      placeholder="Họ"
-      type="text"
-      id="password"
-      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-    />
-  </div>
-  <div className="mb-6">
-      <input
-      placeholder="Tên"
-      type="text"
-      id="repeat-password"
-      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setLastName(e.target.value)
-            }
+                setFirstName(e.target.value)
+              }
+              placeholder="Họ"
+              type="text"
+              id="password"
+              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             />
-  </div>
-           <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={ClickClose}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button color="green">
-            <p onClick={updateUserApi}>
-              <span>Cập nhật</span>
-            </p>
-          </Button>
+          </div>
+          <div className="mb-6">
+            <input
+              placeholder="Tên"
+              type="text"
+              id="repeat-password"
+              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setLastName(e.target.value)
+              }
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={ClickClose}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button color="green">
+              <p onClick={updateUserApi}>
+                <span>Cập nhật</span>
+              </p>
+            </Button>
           </DialogFooter>
-</form>
+        </form>
         {/* <DialogBody divider>
           <input
             type="text"

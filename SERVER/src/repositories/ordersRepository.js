@@ -1,10 +1,17 @@
 import db from "../models";
-import { createOrderItemRepository } from "./orderItemsRepository";
+
 export const createOrderRepository = async (data) => {
-  const { codeOrder, addressId, paymentId, sum, status } = data;
   const response = await db.Orders.findOrCreate({
-    where: { codeOrder },
-    defaults: { codeOrder, addressId, paymentId, sum, status },
+    where: {
+      codeOrder: data.codeOrder,
+    },
+    defaults: {
+      codeOrder: data.codeOrder,
+      addressId: data.addressId,
+      paymentId: data.paymentId,
+      userId: data.userId,
+      status: data.status,
+    },
   });
   return response;
 };
@@ -13,6 +20,21 @@ export const getAllOrderRepository = async () => {
   const data = await db.Orders.findAll({
     include: [
       {
+        model: db.Users,
+        as: "users",
+        attributes: {
+          exclude: [
+            "firstName",
+            "lastName",
+            "password",
+            "avatar",
+            "status",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
+      },
+      {
         model: db.Addresses,
         as: "address",
         attributes: {
@@ -26,37 +48,37 @@ export const getAllOrderRepository = async () => {
           exclude: ["createdAt", "updatedAt"],
         },
       },
-    ],
-    attributes: {
-      exclude: ["paymentId", "addressId", "createdAt", "updatedAt"],
-    },
-  });
-  return data;
-};
-export const getOrderByUserRepository = async ({ id }) => {
-  const data = await db.Orders.findAll({
-    include: [
       {
         model: db.OrderItems,
-        where: { orderId: id },
-        as: "orderItems",
+        as: "orderItem",
         attributes: {
-          exclude: ["createdAt", "updatedAt"],
+          exclude: ["codeOrder", "productSizeId", "createdAt", "updatedAt"],
         },
-      },
-      {
-        model: db.Addresses,
-        as: "address",
-        attributes: {
-          exclude: ["userId", "createdAt", "updatedAt"],
-        },
-      },
-      {
-        model: db.Payments,
-        as: "payments",
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
+        include: [
+          {
+            model: db.ProductSizes,
+            as: "productSizes",
+            attributes: {
+              exclude: ["sizeId", "productId", "createdAt", "updatedAt"],
+            },
+            include: [
+              {
+                model: db.Products,
+                as: "products",
+                attributes: {
+                  exclude: ["createdAt", "updatedAt"],
+                },
+              },
+              {
+                model: db.Sizes,
+                as: "sizes",
+                attributes: {
+                  exclude: ["createdAt", "updatedAt"],
+                },
+              },
+            ],
+          },
+        ],
       },
     ],
     attributes: {
