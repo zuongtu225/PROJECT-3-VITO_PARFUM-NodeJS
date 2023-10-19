@@ -8,6 +8,7 @@ import ButtonEdit from "../../components/Button/ButtonEdit";
 import { EditModal } from "../../components/modal/EditModal";
 import { deleteProducts } from "../../../../Api";
 import { ToastContainer, toast } from "react-toastify";
+import { deleteImage } from "../../../../Api/images";
 
 const ProductManager = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,7 @@ const ProductManager = () => {
 
   const onDeleteProduct = async (id: number) => {
     const data: any = await deleteProducts(id);
+    await deleteImage(id);
     toast.success(data.data.message);
     setTimeout(async () => {
       await dispatch(getApiProducts());
@@ -28,6 +30,7 @@ const ProductManager = () => {
   return (
     <div>
       <AdminHeader title="PRODUCTS" />
+      <ToastContainer />
       <div className="content">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -99,7 +102,6 @@ const ProductManager = () => {
                 );
               })}
             </tbody>
-            <ToastContainer />
           </table>
           <div className="p-4">
             <AdminPagination />

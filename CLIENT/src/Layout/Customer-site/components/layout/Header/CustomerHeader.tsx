@@ -13,21 +13,21 @@ import { AppDispatch } from "../../../../../store";
 import { ToastContainer, toast } from "react-toastify";
 import { getDetailUser } from "../../../../../store/action";
 const CustomerHeader = () => {
+  const nagivate = useNavigate();
   const auth: any = localStorage.getItem("auth") || "";
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
-
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getDetailUser());
   }, [auth]);
 
   //log out
-  const nagivate = useNavigate();
+
   const logout = async () => {
     localStorage.removeItem("auth");
-    await dispatch(getDetailUser()); // phải đợi khi chọc đến api cái đã !!!bug
+    await dispatch(getDetailUser());
     nagivate("/auth/login");
   };
 
@@ -43,6 +43,7 @@ const CustomerHeader = () => {
   const profile = () => {
     navigate("/profile");
   };
+
   return (
     <header id="moveTop">
       <ToastContainer />
@@ -98,7 +99,7 @@ const CustomerHeader = () => {
 
           <div className="account hide-mobile ">
             <div id="loginAccount " className="w-100px">
-              {userDetail?.id ? (
+              {userDetail.id ? (
                 <div className="flex gap-3 items-center">
                   {userDetail.avatar !== "" && (
                     <img

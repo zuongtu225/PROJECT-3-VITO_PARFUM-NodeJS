@@ -18,14 +18,25 @@ export const getOneUser = async (req, res) => {
     return handleError.internalServerError(res);
   }
 };
+
 export const updateUser = async (req, res) => {
-  const { id } = req.user;
-  const avatar = req.file;
   try {
+    const { id } = req.user;
+    const avatar = req.file;
     const response = await services.updateUserServices(id, {
       ...req.body,
-      avatar,
+      avatar: avatar.path,
     });
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error, "ec");
+    return handleError.internalServerError(res);
+  }
+};
+export const updateStatusUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await services.updateStatusUserServices(id, req.body);
     return res.status(200).json(response);
   } catch (error) {
     return handleError.internalServerError(res);

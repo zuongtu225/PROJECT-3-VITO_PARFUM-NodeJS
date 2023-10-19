@@ -41,12 +41,11 @@ export const updateImageController = async (req, res) => {
   }
 };
 export const deleteImageController = async (req, res) => {
-  console.log(req.body);
-  // try {
-  //   const { id } = req.params;
-  //   const response = await services.deleteImageService({ id });
-  //   return res.status(200).json(response);
-  // } catch (error) {
-  //   return handleError.internalServerError(res);
-  // }
+  try {
+    const { id } = req.params;
+    const response = await services.deleteImageService({ id });
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleError.internalServerError(res);
+  }
 };

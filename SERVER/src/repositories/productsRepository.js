@@ -1,3 +1,4 @@
+import { deleteImageController } from "../controllers/imagesController";
 import db from "../models";
 export const createProductRepository = async (products) => {
   const response = await db.Products.findOrCreate({
@@ -87,9 +88,8 @@ export const updateProductRepository = async (id, body) => {
   return response;
 };
 export const deleteProductRepository = async ({ id }) => {
-  // const response = await db.Products.destroy({
-  //   where: { id },
-  // });
-  await deleteImageController(id);
+  const response = await db.Products.destroy({
+    where: { id },
+  });
   return response;
 };

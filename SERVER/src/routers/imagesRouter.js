@@ -15,6 +15,6 @@ imageRouter.put(
   uploadCloud.single("image"),
   controllers.updateImageController
 );
-imageRouter.delete("/", controllers.deleteImageController);
+imageRouter.delete("/:id", controllers.deleteImageController);
 
 module.exports = imageRouter;

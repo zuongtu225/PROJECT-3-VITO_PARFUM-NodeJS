@@ -81,8 +81,6 @@ export interface IUser {
   email: string;
   password: string;
   avatar: string;
-  cart: ICartProduct[];
-  cardVisa: IVisa[];
   role: string;
   status: boolean;
   phone: string;

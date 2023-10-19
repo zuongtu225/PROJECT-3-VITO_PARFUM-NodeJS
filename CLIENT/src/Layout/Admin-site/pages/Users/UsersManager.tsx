@@ -4,9 +4,14 @@ import { Link, NavLink } from "react-router-dom";
 import AdminPagination from "../../components/table/AdminPagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../store";
-import { getApiUsers, getDetailUser } from "../../../../store/action";
-import { updateUser } from "../../../../Api";
+import {
+  getApiProducts,
+  getApiUsers,
+  getDetailUser,
+} from "../../../../store/action";
+import { updateStatusUser, updateUser } from "../../../../Api";
 import { IUser } from "../../../../Interface";
+import { ToastContainer, toast } from "react-toastify";
 
 const UsersManager = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,25 +21,23 @@ const UsersManager = () => {
     dispatch(getApiUsers());
   }, []);
 
-  const getUser = async (id: number) => {
-    // CÁCH NGẮN GỌN ĐỂ CẬP NHẬT THEO ID
-    let userNeed;
-    users.map((user: IUser) => {
-      if (user.id === id) {
-        userNeed = {
-          ...user,
-          status: !user.status,
-        };
-      }
-      return user;
-    });
-    const res = await updateUser(userNeed); // lấy id cập nhật put
-    dispatch(getApiUsers());
+  const handleStatus = async (status: any, id: number) => {
+    const newStatus = +status === 1 ? true : false;
+    const response = await updateStatusUser(newStatus, id);
+    if (response.data.success === true) {
+      setTimeout(async () => {
+        toast.success(response.data.message);
+        await dispatch(getApiUsers());
+      }, 1000);
+    } else {
+      toast.error(response.data.message);
+    }
   };
-
   return (
     <div>
       <AdminHeader title={"USERS"} />
+      <ToastContainer />
+
       <div className="content users">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -77,13 +80,7 @@ const UsersManager = () => {
               </tr>
             </thead>
             <tbody>
-              {users?.map((item: any) => {
-                const buttonStyle = {
-                  backgroundColor: item.status === true ? "green" : "red",
-                  color: "white",
-                  padding: "5px 10px",
-                  margin: "2px",
-                }; // set màu cho button status
+              {users?.map((item: any, index: number) => {
                 return (
                   <tr className="p-10">
                     <td className="w-4 p-4">
@@ -105,7 +102,7 @@ const UsersManager = () => {
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {item.id}
+                      {index + 1}
                     </th>
                     <td className="px-6 py-4 ">
                       <img src={item.avatar} alt="" className="w-20 h-100 " />
@@ -113,22 +110,29 @@ const UsersManager = () => {
                     <td className="px-6 py-4 ">{item.email}</td>
                     <td className="px-6 py-4">{item.phone}</td>
                     <td className="px-6 py-4">
-                      <button>{item.role}</button>
+                      <button>
+                        {item.roles.id === 1 ? "Quản trị viên" : "Người dùng"}
+                      </button>
                     </td>
                     <td className="px-6 py-4 ">
-                      {item.role == "user" && (
-                        <button
-                          onClick={() => getUser(item.id)}
-                          className="w-30 bg-green-500 text-red-100 px-5 py-2 font-semibol m-2"
-                          style={buttonStyle}
+                      {item.roles.id === 2 && (
+                        <select
+                          onChange={(e: any) =>
+                            handleStatus(e.target.value, item.id)
+                          }
                         >
-                          {item.status === true ? "Active" : "Blocked"}
-                        </button>
+                          <option value={item.status ? 1 : 2}>
+                            {item.status ? "Active" : "Block"}
+                          </option>
+                          <option value={item.status ? 2 : 1}>
+                            {item.status ? "Block" : "Active"}
+                          </option>
+                        </select>
                       )}
                     </td>
 
                     <td className="px-6 py-4">
-                      {item.role === "user" && (
+                      {item.roles.id === 2 && (
                         <div>
                           <button className="w-30 bg-green-500 text-red-100 px-5 py-2 font-semibol m-2">
                             Xem

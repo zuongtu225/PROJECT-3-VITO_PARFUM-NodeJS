@@ -40,3 +40,13 @@ export const updateUserRepository = async (id, body) => {
   });
   return response;
 };
+
+export const updateStatusUserRepository = async (id, body) => {
+  const response = await db.Users.update(
+    { status: body.newStatus },
+    {
+      where: { id },
+    }
+  );
+  return response;
+};

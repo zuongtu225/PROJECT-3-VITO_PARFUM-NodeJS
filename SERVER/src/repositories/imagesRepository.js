@@ -45,8 +45,9 @@ export const updateImageRepository = async (id, src) => {
 };
 
 export const deleteImageRepository = async ({ id }) => {
+  console.log(id);
   const response = await db.Images.destroy({
-    where: { id },
+    where: { productId: id },
   });
   return response;
 };
