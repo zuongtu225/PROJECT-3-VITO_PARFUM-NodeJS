@@ -17,8 +17,7 @@ export const createOrderItemServices = async ({ id }) => {
       productSizeId: item.productSizeId,
       userId: item.userId,
     }));
-    const idCart = listCartUser.map((item) => item.id);
-    const response = await createOrderItemRepository(createOrder, idCart);
+    const response = await createOrderItemRepository(createOrder);
     return {
       success: response[1] ? true : false,
       message: response[1]

@@ -10,6 +10,7 @@ export const getApiProducts = createAsyncThunk<ProductType>(
     return response.data;
   }
 );
+
 export const getApiCategories = createAsyncThunk<any>("categories", async () => {
   const response = await axios.get("http://localhost:9000/categories");
   return response.data;
@@ -21,6 +22,22 @@ export const getApiBrands = createAsyncThunk<any>(
     return response.data;
   }
 );
+export const getApiProductSizes = createAsyncThunk<any>(
+  "productSizes",
+  async () => {
+    const response = await axios.get("http://localhost:9000/productSizes");
+    return response.data;
+  }
+);
+export const getCartByUser = createAsyncThunk<any>(
+  "getCartByUser",
+  async () => {
+    const response = await BaseAxios.get("http://localhost:9000/carts/detail");
+    console.log(response);
+    return response.data;
+  }
+);
+
 export const getApiSizes = createAsyncThunk<any>(
   "sizes",
   async () => {
@@ -33,10 +50,10 @@ export const getApiUsers = createAsyncThunk<IUser>("users", async () => {
   return response.data;
 });
 
-export const getApiOrigins = createAsyncThunk<any>(
-  "origins",
+export const getApiOrderItems = createAsyncThunk<any>(
+  "orderItems",
   async () => {
-    const response = await axios.get("http://localhost:9000/origins");
+    const response = await axios.get("http://localhost:9000/orderItems");
     return response.data;
   }
 );
@@ -63,8 +80,6 @@ export const getDetailUser = createAsyncThunk(
 
 export const getOrderApi = createAsyncThunk<any>("getOrderApi", async () => {
   const response = await axios.get("http://localhost:9000/orders");
-  console.log("response", response);
-
   return response.data;
 });
 

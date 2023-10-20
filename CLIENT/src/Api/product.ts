@@ -12,6 +12,16 @@ export const createProduct = (newProduct: IProduct) => {
       console.error("Error!!!!", error);
     });
 };
+export const createProductSize = (newProduct: IProduct) => {
+  return axios
+    .post(`http://localhost:9000/productSizes`,newProduct)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error!!!!", error);
+    });
+};
 
 // delete
 export const updateProduct = (productUpdate: any) => {
@@ -26,9 +36,12 @@ export const updateProduct = (productUpdate: any) => {
       console.error("Error!!!!", error);
     });
 };
-export const deleteProducts = (id: number) => {
-  return axios
-    .delete(`http://localhost:9000/products/${id}`)
+
+export const updateStatusProduct = (status: boolean, id: number) => {
+  return axios.put(
+          `http://localhost:9000/products/${id}`,
+          {status}
+        )
     .then((response) => {
       return response;
     })

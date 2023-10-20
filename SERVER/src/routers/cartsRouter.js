@@ -10,15 +10,7 @@ cartRouter.get(
   [checkAuthentication],
   controllers.getOneCartbyUserController
 );
-cartRouter.put(
-  "/update",
-  [checkAuthentication],
-  controllers.updateCartController
-);
-cartRouter.delete(
-  "/delete",
-  [checkAuthentication],
-  controllers.deleteCartController
-);
+cartRouter.put("/", [checkAuthentication], controllers.updateCartController);
+cartRouter.delete("/", [checkAuthentication], controllers.deleteCartController);
 
 module.exports = cartRouter;

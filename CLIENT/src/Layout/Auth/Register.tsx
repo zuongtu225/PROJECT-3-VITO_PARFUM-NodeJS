@@ -87,7 +87,6 @@ const Register = () => {
 
   return (
     <>
-      <CustomerHeader />
       <div className="bg-blue-200 flex">
         <div className="flex-col flex ml-auto mr-auto items-center w-full lg:w-2/3 md:w-3/5">
           <h1 className="font-bold text-2xl my-10 text-black"> Đăng Ký</h1>

@@ -23,6 +23,7 @@ export const loginUserServices = async (dataUser) => {
       accessToken:
         response.token !== null ? response.token : "Nhập sai mật khẩu",
       role: response.role,
+      status: response.status,
     };
   } catch (error) {
     return error;

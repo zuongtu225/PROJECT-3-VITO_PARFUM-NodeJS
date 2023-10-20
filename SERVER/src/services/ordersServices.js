@@ -14,9 +14,10 @@ export const createOrderServices = async (id, data) => {
     for (const item of uniqueCodeOrders) {
       const createOrder = {
         codeOrder: item,
-        addressId: +data.addressId,
-        paymentId: +data.paymentId,
+        addressId: data.addressId,
+        paymentId: 1,
         userId: id,
+        total: data.total,
         status: "Pending",
       };
       const response = await createOrderRepository(createOrder);

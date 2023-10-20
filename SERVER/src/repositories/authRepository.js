@@ -38,5 +38,5 @@ export const loginUserRepository = async (dataUser) => {
       )
     : null;
 
-  return { token, role: user.roleId };
+  return { token, role: user.roleId, status: user.status };
 };

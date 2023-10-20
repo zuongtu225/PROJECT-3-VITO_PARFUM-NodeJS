@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   getApiBank,
+  getCartByUser,
   getDetailUser,
   getOrderApi,
 } from "../../../../store/action";
@@ -11,43 +12,56 @@ import { IoMdCash } from "react-icons/io";
 import { FiPhoneCall } from "react-icons/fi";
 import { BiUser } from "react-icons/bi";
 import { IOder, IVisa } from "../../../../Interface";
-import { addApiOrders } from "../../../../Api/order";
+import { createOrder } from "../../../../Api/order";
 import { ToastContainer, toast } from "react-toastify";
-import { updateUser } from "../../../../Api";
+import { deleteCart, updateUser } from "../../../../Api";
 import { updateBanks } from "../../../../Api/banks";
+import { createOrderItem } from "../../../../Api/orderItem";
+import { createAddress } from "../../../../Api/address";
 const Checkout = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [payment, setPayment] = useState<boolean>(false);
-  const auth: any = localStorage.getItem("auth") || "";
+  const carts: any = useSelector((state: any) => state?.cartReducer?.carts);
+
   useEffect(() => {
     dispatch(getApiBank());
     dispatch(getOrderApi());
+    dispatch(getCartByUser());
     dispatch(getDetailUser());
   }, []);
+
   // vấn đề reload
   const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
+  const [total, setTotal] = useState(0);
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    if (carts) {
+      for (const item of carts) {
+        totalPrice += item.productSizes.products.price * item.quantity;
+      }
+    }
+    return totalPrice;
+  };
+  useEffect(() => {
+    setTotal(calculateTotalPrice());
+  }, [carts]);
+
   // vẫn phải cập nhật visa ở ngân hàng
   const banks: any = useSelector((state: any) => state?.bankReducer?.banks);
 
-  const [total, setTotal] = useState<number>(userDetail?.sum);
-  const [carts, setCarts] = useState<any>([]);
   useEffect(() => {
-    setTotal(userDetail?.sum);
-    setCarts(userDetail.cart);
+    setTotal(calculateTotalPrice());
   }, []);
 
-  const orders: any = useSelector((state: any) => state?.orderReducer?.orders);
+  // const orders: any = useSelector((state: any) => state?.orderReducer?.orders);
 
-  // get value input
-  const [checkCvc, setCheckCvc] = useState<boolean>(false); // luc đầu set password visa sai
+  const [checkCvc, setCheckCvc] = useState<boolean>(false);
   const [name, setName] = useState<string>();
-  const [address, setAddress] = useState<IVisa>();
-  const [phone, setPhone] = useState<IVisa>(userDetail?.phone);
-  // optional chaining userDetail?.sum sẽ trả về undefined, nhưng không gây ra lỗi trong trường hợp này
-  // xử lý check cvc[password] visa
+  const [address, setAddress] = useState<string>();
+  const [phone, setPhone] = useState<string>(userDetail?.phone);
 
   const handleCvc = (e: any) => {
     const cvcInput = Number(e.target.value);
@@ -65,6 +79,7 @@ const Checkout = () => {
       paymentCOD();
     }
   };
+
   // visa
   const paymentVisa = async () => {
     if (checkCvc === true) {
@@ -88,15 +103,15 @@ const Checkout = () => {
         userDetail?.cardVisa.wallet >= userDetail?.sum &&
         userDetail?.cardVisa.exp > year
       ) {
-        const res: any = await addApiOrders(order);
+        // const res: any = await addApiOrders(order);
         // nếu ko dùng await sẽ lỗi bất đồng bộ
-        if (res.status === 201) {
-          updateInfoVisaUser(); // cập nhật thông tin wallet, các đơn hàng trong giỏ
-          toast.success("Đặt hàng thành công");
-          setTimeout(() => {
-            navigate("/");
-          }, 1500);
-        }
+        // if (res.status === 201) {
+        //   updateInfoVisaUser(); // cập nhật thông tin wallet, các đơn hàng trong giỏ
+        //   toast.success("Đặt hàng thành công");
+        //   setTimeout(() => {
+        //     navigate("/");
+        //   }, 1500);
+        // }
       } else {
         toast.error("Số dư không đủ hoặc thẻ đã hết hạn");
       }
@@ -106,38 +121,32 @@ const Checkout = () => {
   };
   // cod
   const paymentCOD = async () => {
-    let order = {
-      id: Math.random(),
-      codeOrder: Number("2" + (Math.random() * 10000000).toFixed(0)),
-      name: name,
-      // userId: userDetail.id,
-      address: address,
-      phone: phone,
-      email: userDetail.email,
-      cartOrders: userDetail.cart,
-      sum: userDetail.sum,
-      date: new Date(),
-      status: "Pending",
-      payment: "COD",
+    const orderItem: any = await createOrderItem();
+    const infoAddress = {
+      fullName: name,
+      phone,
+      address,
     };
-    const updateUserInfo = {
-      ...userDetail,
-      sum: 0,
-      cart: [],
-    };
-    await updateUser(updateUserInfo); // cập nhật lại user api
-    // dispatch(getDetailUser(userDetail.id));
-    const res: any = await addApiOrders(order);
-    // nếu ko dùng await sẽ lỗi bất đồng bộ
-    if (res.status === 201) {
-      toast.success("Đặt hàng thành công");
-      setTimeout(() => {
-        navigate("/");
-      }, 2500);
+    const resAddress: any = await createAddress(infoAddress);
+    const addressId = resAddress.data.response[0].id;
+
+    if (orderItem.data.success === true) {
+      const createOrders = {
+        paymentId: 1,
+        addressId: addressId,
+        total,
+      };
+      const resOrder: any = await createOrder(createOrders);
+      if (resOrder.success === true) {
+        toast.success("Đặt hàng thành công");
+        await deleteCart();
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      }
     }
   };
 
-  // trừ ví => 1 trong user =>2  trong banks
   const updateInfoVisaUser = async () => {
     const updateUserInfo = {
       ...userDetail,
@@ -181,10 +190,12 @@ const Checkout = () => {
                     <img
                       className="m-2 h-24 w-28 rounded-md border object-cover object-center"
                       alt=""
-                      src={`${item.images.url1}`}
+                      src={`${item.productSizes.products.images[0].src}`}
                     />
                     <div className="flex w-full flex-col px-4 py-4">
-                      <span className="font-semibold">{item.name}</span>
+                      <span className="font-semibold">
+                        {item.productSizes.products.title}
+                      </span>
                       <div className="flex items-center gap-3">
                         <span className="text-light-blue-500">Số lượng:</span>
                         <span className="text-blue-gray-100">
@@ -192,7 +203,8 @@ const Checkout = () => {
                         </span>
                       </div>
                       <p className="text-lg text-red-600  ">
-                        Giá: {item.price.toLocaleString()} đ
+                        Giá:
+                        {item.productSizes.products.price?.toLocaleString()} đ
                       </p>
                     </div>
                   </div>
@@ -310,7 +322,7 @@ const Checkout = () => {
                       type="text"
                       id="card-no"
                       name="card-no"
-                      value={userDetail.cardVisa.code}
+                      // value={userDetail.cardVisa.code}
                       className="w-full  border border-gray-200 px-2 py-3 pl-[45px] text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                       placeholder="xxxx-xxxx-xxxx-xxxx"
                     />
@@ -378,7 +390,7 @@ const Checkout = () => {
               <div className="mt-6 flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Tổng tiền</p>
                 <p className="text-2xl font-semibold  text-red-500">
-                  {(userDetail.sum + 20000).toLocaleString()} ₫
+                  {total.toLocaleString()} ₫
                 </p>
               </div>
             </div>

@@ -11,9 +11,11 @@ import { deleteOrder, updateOrderApi } from "../../../../Api/order";
 const OrderManager = () => {
   const dispatch = useDispatch<AppDispatch>();
   const orderApi = useSelector((state: any) => state?.orderReducer?.orders);
+  console.log(orderApi, "<<");
+
   useEffect(() => {
     dispatch(getHistoryOrders());
-    dispatch(getOrderApi()); //  phải dispatch [gửi payload tới store]
+    dispatch(getOrderApi());
   }, []);
 
   const [statusOder, getStatusOrder] = useState<string>("Pending");
@@ -66,7 +68,7 @@ const OrderManager = () => {
           ...orderNeedChange,
           status: "Completed",
         };
-         await updateOrderApi(updateDone);
+        await updateOrderApi(updateDone);
         const resCompleted: any = await updateHistoryOrders(orderNeedChange);
         if (resCompleted.status === 201) {
           toast.success("Đơn hàng đã hoành thành");

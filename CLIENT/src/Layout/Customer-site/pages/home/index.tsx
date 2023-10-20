@@ -81,7 +81,6 @@ const Home = () => {
       </div>
       <div className="newArrivals container">
         {products?.map((item: any) => {
-          // !!!! ko đặt ? thì map lun sẽ undefined bắt buọc phải đặt dấu ?
           return (
             <div key={item.id} className="product">
               <div className="buy-now-container">
@@ -180,7 +179,6 @@ const Home = () => {
       </div>
       <div className="best-seller container">
         {products?.map((item: any) => {
-          // !!!! ko đặt ? thì map lun sẽ undefined bắt buọc phải đặt dấu ?
           return (
             <div key={item.id} className="product">
               <div className="buy-now-container">

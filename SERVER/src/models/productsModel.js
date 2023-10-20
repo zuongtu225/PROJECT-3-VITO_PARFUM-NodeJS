@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "id",
         as: "images",
       });
+      Products.hasMany(models.ProductSizes, {
+        foreignKey: "productId",
+        sourceKey: "id",
+        as: "productSize",
+      });
     }
   }
   Products.init(
@@ -28,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       price: DataTypes.INTEGER,
       stock: DataTypes.INTEGER,
       description: DataTypes.TEXT,
+      status: DataTypes.BOOLEAN,
     },
     {
       sequelize,

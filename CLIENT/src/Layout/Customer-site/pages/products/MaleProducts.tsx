@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../store";
 import {
   getApiBrands,
-  getApiOrigins,
   getApiProducts,
   getDetailUser,
 } from "../../../../store/action";
@@ -18,7 +17,6 @@ const MaleProducts = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getApiBrands());
-    dispatch(getApiOrigins());
     dispatch(getApiProducts());
   }, []);
 

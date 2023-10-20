@@ -6,7 +6,7 @@ import { getApiProducts } from "../../../../store/action";
 import { AppDispatch } from "../../../../store";
 import ButtonEdit from "../../components/Button/ButtonEdit";
 import { EditModal } from "../../components/modal/EditModal";
-import { deleteProducts } from "../../../../Api";
+import { updateProduct, updateStatusProduct } from "../../../../Api";
 import { ToastContainer, toast } from "react-toastify";
 import { deleteImage } from "../../../../Api/images";
 
@@ -18,13 +18,17 @@ const ProductManager = () => {
     dispatch(getApiProducts());
   }, []);
 
-  const onDeleteProduct = async (id: number) => {
-    const data: any = await deleteProducts(id);
-    await deleteImage(id);
-    toast.success(data.data.message);
-    setTimeout(async () => {
-      await dispatch(getApiProducts());
-    }, 1500);
+  const handleStatus = async (status: any, id: number) => {
+    const newStatus = +status === 1 ? true : false;
+    const response: any = await updateStatusProduct(newStatus, id);
+    if (response.data.success === true) {
+      setTimeout(async () => {
+        toast.success(response.data.message);
+        await dispatch(getApiProducts());
+      }, 1000);
+    } else {
+      toast.error(response.data.message);
+    }
   };
 
   return (
@@ -71,7 +75,7 @@ const ProductManager = () => {
             <tbody>
               {data?.map((item: any, index: number) => {
                 return (
-                  <tr key={item.id} className="p-10 zitems-center">
+                  <tr key={index} className="p-10 zitems-center">
                     <td className="w-4 p-4">{index}</td>
                     <td
                       scope="row"
@@ -91,21 +95,24 @@ const ProductManager = () => {
                     </td>
                     <td className=" py-8 px-5 flex ">
                       <ButtonEdit item={item} className="pl-5" />
-                      <button
-                        className="bg-red-600 text-red-200 px-5 py-2 font-semibol"
-                        onClick={() => onDeleteProduct(item.id)}
+                      <select
+                        onChange={(e: any) =>
+                          handleStatus(e.target.value, item.id)
+                        }
                       >
-                        Xóa
-                      </button>
+                        <option value={item.status ? 1 : 2}>
+                          {item.status ? "Active" : "Block"}
+                        </option>
+                        <option value={item.status ? 2 : 1}>
+                          {item.status ? "Block" : "Active"}
+                        </option>
+                      </select>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <div className="p-4">
-            <AdminPagination />
-          </div>
         </div>
       </div>
     </div>

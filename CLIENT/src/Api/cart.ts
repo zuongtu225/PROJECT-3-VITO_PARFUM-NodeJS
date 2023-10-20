@@ -1,10 +1,9 @@
-// BÊN FILE API THÌ  XỬ LÝ LOGIC CRUD
-import axios from "axios";
+
 import BaseAxios from "./requsetToken";
-export const createOrder = (order: any) => {
-  
+// create
+export const createCart = (newProduct: any) => {
   return BaseAxios
-    .post(`http://localhost:9000/orders`, order)
+    .post(`http://localhost:9000/carts`,newProduct)
     .then((response) => {
       return response;
     })
@@ -12,11 +11,9 @@ export const createOrder = (order: any) => {
       console.error("Error!!!!", error);
     });
 };
-
-
-export const deleteOrder = (order: any) => {
-  return axios
-    .delete(`http://localhost:5000/orders/${order.id}`, order)
+export const updateCart = (newCart: any) => {
+  return BaseAxios
+    .put(`http://localhost:9000/carts`,newCart)
     .then((response) => {
       return response;
     })
@@ -24,10 +21,9 @@ export const deleteOrder = (order: any) => {
       console.error("Error!!!!", error);
     });
 };
-
-export const updateOrderApi = (order: any) => {
-  return axios
-    .put(`http://localhost:5000/orders/${order.id}`, order)
+export const deleteCart = () => {
+  return BaseAxios
+    .delete(`http://localhost:9000/carts`,)
     .then((response) => {
       return response;
     })

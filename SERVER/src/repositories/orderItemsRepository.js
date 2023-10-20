@@ -1,8 +1,9 @@
 import db from "../models";
-export const createOrderItemRepository = async (createOrder, idCart) => {
+export const createOrderItemRepository = async (createOrder) => {
   const response = await db.OrderItems.bulkCreate(createOrder);
   return response;
 };
+
 export const getAllOrderItemRepository = async () => {
   const data = await db.OrderItems.findAll({
     include: [

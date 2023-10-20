@@ -3,10 +3,10 @@ export const createAddressRepository = async (id, data) => {
   const response = await db.Addresses.findOrCreate({
     where: { address: data.address },
     defaults: {
-      address: data.address,
       userId: id,
+      address: data.address,
       fullName: data.fullName,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: data.phone,
     },
   });
   return response;

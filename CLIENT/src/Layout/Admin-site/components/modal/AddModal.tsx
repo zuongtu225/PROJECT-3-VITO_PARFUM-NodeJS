@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import ProductFormAdd from "./FormAdd/AddProductForm";
-import { createProduct } from "../../../../Api";
+import { createProduct, createProductSize } from "../../../../Api";
 import { createImages } from "../../../../Api/images";
 import { IBrand, IProduct } from "../../../../Interface";
 import AddBrandForm from "./FormAdd/AddBrandForm";
@@ -65,6 +65,7 @@ export function AddModal(props: any): any {
         for (let i of Object.entries(imageData)) formData.append(i[0], i[1]);
         for (let img of images) formData.append("images", img);
         const responseProduct: any = await createProduct(product);
+        await createProductSize(product);
         await createImages(formData);
         if (responseProduct.data.success === true) {
           props.handleClose(false);

@@ -25,19 +25,20 @@ const Login = () => {
       email,
       password,
     };
-    const response = await loginAPI(dataUser);
     const newError = {
       isError: false,
       emailMSG: "",
     };
+    const response = await loginAPI(dataUser);
     if (response.data.success === false) {
       newError.isError = true;
       newError.emailMSG = "Email hoặc mật khẩu không đúng";
     }
     setError(newError);
+
     // role = 1 admin, role = 2 user
     if (response.data.success === true) {
-      if (response.data.role === 2) {
+      if (response.data.role === 2 && response.data.status === true) {
         toast.success("Đăng nhập thành công");
         localStorage.setItem("auth", response.data.accessToken);
         setTimeout(() => {
@@ -57,7 +58,6 @@ const Login = () => {
 
   return (
     <>
-      <CustomerHeader />
       <div className="bg-blue-200 flex">
         <div className="flex-col flex ml-auto mr-auto items-center w-full lg:w-2/3 md:w-3/5">
           <h1 className="font-bold text-2xl my-10 text-black"> Đăng Nhập</h1>

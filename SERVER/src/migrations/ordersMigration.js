@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      total: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: "TIMESTAMP",

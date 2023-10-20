@@ -7,7 +7,6 @@ export const createOrderItem = async (req, res) => {
     const response = await services.createOrderItemServices({ id });
     return res.status(200).json(response);
   } catch (error) {
-    console.log(error, "loi roi >>>");
     return handleError.internalServerError(res);
   }
 };

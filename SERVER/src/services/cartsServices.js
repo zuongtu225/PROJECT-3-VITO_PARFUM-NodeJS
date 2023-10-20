@@ -7,10 +7,10 @@ import {
 } from "../repositories/cartRepository";
 export const createCartServices = async (id, data) => {
   try {
-    await createCartRepository(id, data);
+    const response = await createCartRepository(id, data);
     return {
-      success: true,
-      message: "Tạo Cart thành công",
+      success: response[1] ? true : false,
+      message: response[1] ? "Tạo Cart thành công" : " Cart đã tồn tại",
     };
   } catch (error) {
     return error;
@@ -37,6 +37,7 @@ export const updateCartServices = async (id, body) => {
   try {
     const response = await updateCartRepository(id, body);
     return {
+      success: response > 0 ? true : false,
       message: response > 0 ? "Cập nhật thành công" : "Id không đúng",
     };
   } catch (error) {
@@ -48,6 +49,7 @@ export const deleteCartServices = async ({ id }) => {
     const response = await deleteCartRepository({ id });
     return {
       message: response > 0 ? "Xóa thành công" : "Id không đúng",
+      success: response > 0 ? true : false,
     };
   } catch (error) {
     return error;

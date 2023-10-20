@@ -1,6 +1,5 @@
 import {
   createProductRepository,
-  deleteProductRepository,
   getAllProductRepository,
   getOneProductRepository,
   updateProductRepository,
@@ -34,24 +33,12 @@ export const getOneProductsServices = async ({ id }) => {
     return error;
   }
 };
-
 export const updateProductsServices = async (id, body) => {
   try {
     const response = await updateProductRepository(id, body);
     return {
       success: response > 0 ? true : false,
       message: response > 0 ? "Cập nhật sản phẩm thành công" : " Id không đúng",
-    };
-  } catch (error) {
-    return error;
-  }
-};
-export const deleteProductsServices = async ({ id }) => {
-  try {
-    const response = await deleteProductRepository({ id });
-    return {
-      success: response > 0 ? true : false,
-      message: response > 0 ? "Xóa sản phẩm thành công" : " Id không đúng",
     };
   } catch (error) {
     return error;

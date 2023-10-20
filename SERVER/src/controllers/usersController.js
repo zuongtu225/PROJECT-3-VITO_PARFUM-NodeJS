@@ -29,7 +29,6 @@ export const updateUser = async (req, res) => {
     });
     return res.status(200).json(response);
   } catch (error) {
-    console.log(error, "ec");
     return handleError.internalServerError(res);
   }
 };

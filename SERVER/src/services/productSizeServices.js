@@ -6,21 +6,22 @@ import {
 } from "../repositories/productSizeRepository";
 export const createProductSizeServices = async (data) => {
   try {
-    for (const size of data.sizeId) {
-      const productSize = {
-        productId: data.productId,
-        sizeId: size,
-      };
-      const response = await createProductSizeRepository(productSize);
-      return {
-        success: response[1] === true ? true : false,
-        message:
-          response[1] === true
-            ? "Tạo ProductSize thành công"
-            : "ProductSize đã tồn tại ",
-      };
-    }
+    // let response;
+    const productSize = {
+      productId: data.id,
+      sizeId: data.sizeId,
+    };
+
+    const response = await createProductSizeRepository(productSize);
+    // return {
+    //   success: response[1] === true ? true : false,
+    //   message:
+    //     response[1] === true
+    //       ? "Tạo ProductSize thành công"
+    //       : "ProductSize đã tồn tại ",
+    // };
   } catch (error) {
+    console.log(error);
     return error;
   }
 };

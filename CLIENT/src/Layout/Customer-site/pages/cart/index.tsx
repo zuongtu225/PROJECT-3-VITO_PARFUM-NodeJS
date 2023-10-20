@@ -3,73 +3,49 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { VscHome } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../store";
-import { getApiBank, getDetailUser } from "../../../../store/action";
+import {
+  getApiBank,
+  getCartByUser,
+  getDetailUser,
+} from "../../../../store/action";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
-import { updateUser } from "../../../../Api";
+import { updateCart, updateUser } from "../../../../Api";
 import { IProduct } from "../../../../Interface";
 const CustomerCart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [carts, setCarts] = useState<any>([]);
   const auth: any = localStorage.getItem("auth") || "";
   const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
-  useEffect(() => {
-    dispatch(getDetailUser());
-  }, []);
+  const [quantity, setQuantity] = useState<number>(0);
 
-  useEffect(() => {
-    setCarts(userDetail.cart);
-  }, [userDetail]); // khi user detail thay đổi state thì phải cập nhật ngay
+  const carts: any = useSelector((state: any) => state?.cartReducer?.carts);
 
-  const total = carts?.reduce((accumulator: any, product: any) => {
-    // NHỚ THAM CHIẾU LÀ THAY ĐỔI TỚI THẰNG GỐC LUÔN <=======
-    const productPrice = product.price * product.oderQty;
-    return accumulator + productPrice;
-  }, 0);
-  // CÁCH NEW CẢI TIẾN CÓ THỂ SET LẠI API
   const minus = async (id: number) => {
-    const updatedA = carts?.map((item: any) => {
-      if (item.id === id && item.oderQty > 1) {
-        return { ...item, oderQty: item.oderQty - 1 };
+    const updatedCarts = carts?.map((item: any) => {
+      if (item.id === id && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
       }
       return item;
     });
-    setCarts(updatedA); // chỉ hiển thị theo màn hình
-    const newDataUserCart = { ...userDetail, cart: updatedA };
-    await updateUser(newDataUserCart);
-    // khi gửi đi request thì sẽ nhận về 1 respon
+    await updateCart(updatedCarts);
   };
+
   const plus = async (id: number) => {
-    const updatedA = carts?.map((item: any) => {
-      if (item.id === id) {
-        return { ...item, oderQty: item.oderQty + 1 };
-      }
-      return item;
-    });
-    setCarts(updatedA); // chỉ hiển thị theo màn hình
-    const newDataUserCart = { ...userDetail, cart: updatedA };
-    const res = await updateUser(newDataUserCart);
-    // khi gửi đi request thì sẽ nhận về 1 respon
+    const itemCart = carts?.find((item: any) => item.id === id);
+    const updatedItemCart = { ...itemCart };
+    updatedItemCart.quantity += 1;
   };
-  // delete
-  const deleteCart = async (id: number) => {
-    const updatedA = carts?.filter((item: IProduct) => item.id !== id);
-    setCarts(updatedA); // chỉ hiển thị theo màn hình
-    const newDataUserCart = { ...userDetail, cart: updatedA };
-    await updateUser(newDataUserCart);
-  };
-  //checkout
-  // const [show, setShow] = useState(false);
-  const goToCheckout = async () => {
-    dispatch(getApiBank());
-    dispatch(getDetailUser());
-    const newDataUserCart = { ...userDetail, sum: total };
-    await updateUser(newDataUserCart);
+
+  const checkout = () => {
     navigate("/checkout");
   };
+  useEffect(() => {
+    dispatch(getDetailUser());
+    dispatch(getCartByUser());
+  }, []);
 
   return (
     <main>
@@ -96,32 +72,40 @@ const CustomerCart = () => {
                 <div className="cart-item">
                   <div className="item-img-info">
                     <input type="checkbox" />
-                    <img src={`${item.images.url1}`} alt="" />
+                    <img
+                      src={`${item.productSizes?.products?.images[0]?.src}`}
+                      alt=""
+                    />
                     <div className="detail-product-order">
-                      <p className="name"> {item.name}</p>
+                      <p className="name">
+                        {item.productSizes?.products?.title}
+                      </p>
                     </div>
                   </div>
 
                   <div className="price-order hide-mobile">
-                    {item.price.toLocaleString()} ₫
+                    {item.productSizes?.products?.price?.toLocaleString()} ₫
                   </div>
 
                   <div className="quantity-parent">
-                    <button onClick={() => minus(item.id)}>
-                      <AiOutlineMinus className="fa-solid fa-minus pl-2"></AiOutlineMinus>
+                    <button>
+                      <AiOutlineMinus
+                        onClick={() => minus(item.id)}
+                        className="fa-solid fa-minus pl-2"
+                      ></AiOutlineMinus>
                     </button>
-                    <input min="0" value={`${item.oderQty}`} />
-                    <button onClick={() => plus(item.id)}>
-                      <AiOutlinePlus className="fa-solid fa-plus pl-2"></AiOutlinePlus>
+                    <input min="0" value={`${item.quantity}`} />
+                    <button>
+                      <AiOutlinePlus
+                        onClick={() => plus(item.id)}
+                        className="fa-solid fa-plus pl-2"
+                      ></AiOutlinePlus>
                     </button>
                   </div>
                   <div id="price-after">
-                    {(item.price * item.oderQty).toLocaleString()} ₫
+                    {item.productSizes?.products?.price * item.quantity}₫
                   </div>
-                  <RiDeleteBinLine
-                    className="text-[20px] text-red-500 mr-5 cursor-pointer"
-                    onClick={() => deleteCart(item.id)}
-                  />
+                  <RiDeleteBinLine className="text-[20px] text-red-500 mr-5 cursor-pointer" />
                 </div>
               );
             })}
@@ -143,10 +127,8 @@ const CustomerCart = () => {
                 </div>
                 <div className="total-price">
                   <p>Tổng: </p>
-                  <p id="printPrice" className="price pl-5 ">
-                    {total?.toLocaleString()}
-                  </p>
-                  <button onClick={goToCheckout} className="pay-tottaly">
+                  <p id="printPrice" className="price pl-5 "></p>
+                  <button className="pay-tottaly" onClick={checkout}>
                     Thanh toán
                   </button>
                 </div>

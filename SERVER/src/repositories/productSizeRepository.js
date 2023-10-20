@@ -9,11 +9,37 @@ export const createProductSizeRepository = async (data) => {
   });
   return response;
 };
+
 export const getAllProductSizeRepository = async () => {
   const data = await db.ProductSizes.findAll({
     attributes: {
       exclude: ["createdAt", "updatedAt"],
     },
+    // include: [
+    //   {
+    //     model: db.Products,
+    //     as: "products",
+    //     attributes: {
+    //       exclude: ["createdAt", "updatedAt"],
+    //     },
+    //     include: [
+    //       {
+    //         model: db.Images,
+    //         as: "images",
+    //         attributes: {
+    //           exclude: ["createdAt", "updatedAt"],
+    //         },
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     model: db.Sizes,
+    //     as: "sizes",
+    //     attributes: {
+    //       exclude: ["createdAt", "updatedAt"],
+    //     },
+    //   },
+    // ],
   });
   return data;
 };

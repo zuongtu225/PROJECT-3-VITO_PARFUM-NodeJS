@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
+      status: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
       description: {
         type: Sequelize.TEXT,
         allowNull: false,

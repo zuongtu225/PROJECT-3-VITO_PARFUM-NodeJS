@@ -24,7 +24,6 @@ const CustomerHeader = () => {
   }, [auth]);
 
   //log out
-
   const logout = async () => {
     localStorage.removeItem("auth");
     await dispatch(getDetailUser());
@@ -99,7 +98,7 @@ const CustomerHeader = () => {
 
           <div className="account hide-mobile ">
             <div id="loginAccount " className="w-100px">
-              {userDetail.id ? (
+              {auth !== "" ? (
                 <div className="flex gap-3 items-center">
                   {userDetail.avatar !== "" && (
                     <img

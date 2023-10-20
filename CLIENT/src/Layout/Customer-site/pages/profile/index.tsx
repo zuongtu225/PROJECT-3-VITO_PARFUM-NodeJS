@@ -52,39 +52,29 @@ const Profile = () => {
     dispatch(getDetailUser());
   }, []);
 
-  const addVisa = async (e: any) => {
-    e.preventDefault();
-    const visa = listBanks.find((item: IVisa) => item.code === code);
-    if (!visa) {
-      toast.error("THẺ VISA KHÔNG TỒN TẠI HOẶC SAI MÃ");
-    } else {
-      const update = { ...userDetail, cardVisa: visa };
-      const respon = await updateUser(update); // cập nhật lại user
-      if ((respon as any).status === 200) {
-        toast.success("THÊM THẺ VISA THÀNH CÔNG");
-        // dispatch(getDetailUser());
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
-    }
-  };
   const updateUserApi = async () => {
     const newUserAvatar = {
       ...userDetail,
-      // avatar: avatar,
+      avatar: avatar,
       firstName,
       lastName,
     };
     const res = await updateUser(newUserAvatar);
-    setOpen(false);
+    console.log(res);
+
+    // if (res.success === true) {
+    //   toast.success("Cập nhật thành công");
+    //   dispatch(getDetailUser());
+    //   setOpen(false);
+    // } else {
+    //   toast.error("Cập nhật thất bại");
+    // }
   };
   return (
     <>
-      {/* model */}
       <Dialog open={open} handler={ClickClose}>
         <DialogHeader>
-          Cập nhật thông tin cá nhân{" "}
+          Cập nhật thông tin cá nhân
           <LiaUserEditSolid className="text-light-blue-600 ml-5" />
         </DialogHeader>
         <form encType="multipart/form-data">
@@ -142,34 +132,6 @@ const Profile = () => {
             </Button>
           </DialogFooter>
         </form>
-        {/* <DialogBody divider>
-          <input
-            type="text"
-            className="w-full mt-2   py-4 rounded-[7px] border-light-blue-500"
-            placeholder="Họ "
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setfirstName(e.target.value)
-            }
-          />
-          <input
-            type="text"
-            className="w-full mt-2 mb-2   py-4 rounded-[7px] border-light-blue-500"
-            placeholder="Tên"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setlastName(e.target.value)
-            }
-          />
-          <input
-            type="file"
-            className="w-full py-4 rounded-[7px] border-light-blue-500"
-            placeholder="Ảnh đại diện"
-            onChange={(e: any) => {
-              const file = e.target.files[0]; // dag bug
-              setAvatar(file);
-            }
-            }
-          />
-        </DialogBody> */}
       </Dialog>
       {/* model */}
       <img
@@ -248,7 +210,7 @@ const Profile = () => {
             </h4>
           </div>
           <form
-            onSubmit={(e) => addVisa(e)}
+            // onSubmit={(e) => addVisa(e)}
             className="w-full mx-auto flex flex-col justify-center "
             noValidate
           >

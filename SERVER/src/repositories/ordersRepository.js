@@ -9,6 +9,7 @@ export const createOrderRepository = async (data) => {
       codeOrder: data.codeOrder,
       addressId: data.addressId,
       paymentId: data.paymentId,
+      total: data.total,
       userId: data.userId,
       status: data.status,
     },

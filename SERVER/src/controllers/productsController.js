@@ -29,19 +29,7 @@ export const getOneProducts = async (req, res) => {
 export const updateProducts = async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await services.updateProductsServices(id, {
-      ...req.body,
-    });
-    return res.status(200).json(response);
-  } catch (error) {
-    return handleError.internalServerError(res);
-  }
-};
-
-export const deleteProducts = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const response = await services.deleteProductsServices({ id });
+    const response = await services.updateProductsServices(id, req.body);
     return res.status(200).json(response);
   } catch (error) {
     return handleError.internalServerError(res);

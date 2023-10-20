@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       addressId: DataTypes.INTEGER,
       paymentId: DataTypes.INTEGER,
       userId: DataTypes.BIGINT,
+      total: DataTypes.BIGINT,
       status: DataTypes.STRING,
     },
     {

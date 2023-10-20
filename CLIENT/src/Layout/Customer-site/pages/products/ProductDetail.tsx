@@ -4,38 +4,65 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { VscHome } from "react-icons/vsc";
 import { IProduct, IUser } from "../../../../Interface";
 import { AppDispatch, useAppDispatch } from "../../../../store";
-import { getDetailProduct, getDetailUser } from "../../../../store/action";
+import {
+  getApiProductSizes,
+  getDetailProduct,
+  getDetailUser,
+} from "../../../../store/action";
 import { BiSolidStar } from "react-icons/bi";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import { updateUser } from "../../../../Api/user";
+import { createCart } from "../../../../Api";
 const ProductsDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const idProduct = useParams();
-
-  useEffect(() => {
-    dispatch(getDetailProduct(Number(idProduct.id)));
-    dispatch(getDetailUser());
-  }, []);
-
-  // user
-  // const auth: any = localStorage.getItem("auth") || "";
+  const navigate = useNavigate();
+  const [img, setImg] = useState<string>("");
+  const [sizeID, setSizeID] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(1);
+  const { id } = useParams();
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
-
   const productDetail = useSelector(
     (state: any) => state?.productReducer?.productDetail
   );
+  const productSizes = useSelector(
+    (state: any) => state?.productSizeReducer?.productSizes
+  );
 
-  const [img, setImg] = useState<string>();
-  const [quantity, setQuantity] = useState<number>(1);
-  //product
+  const addToCart = async () => {
+    const productId = Number(id);
+    const newProductSize = productSizes?.filter(
+      (item: any) => item.productId === productId && item.sizeId === sizeID
+    );
 
-  //SLIDER
+    const newCart = {
+      productSizeId: newProductSize[0]?.id,
+      quantity: +quantity,
+    };
+    const resCart: any = await createCart(newCart);
+    console.log(resCart, "<<<");
+
+    if (resCart.data.success === true) {
+      toast.success("Đặt hàng thành công");
+      setTimeout(() => {
+        navigate("/cart");
+      }, 1500);
+    } else {
+      toast.error("Đặt hàng thất bại");
+    }
+  };
 
   useEffect(() => {
-    setImg(productDetail?.images[0]?.src);
+    dispatch(getDetailProduct(id));
+    dispatch(getDetailUser());
+    dispatch(getApiProductSizes());
+  }, []);
+  useEffect(() => {
+    setImg(
+      productDetail?.images !== undefined && productDetail?.images[0]?.src
+    );
   }, [productDetail]);
 
   const handleClick = (src: string) => {
@@ -68,11 +95,19 @@ const ProductsDetail = () => {
               <div className="img-item">
                 <button
                   onClick={() =>
-                    handleClick(`${productDetail?.images[1]?.src}`)
+                    handleClick(
+                      `${
+                        productDetail?.images !== undefined &&
+                        productDetail?.images[1]?.src
+                      }`
+                    )
                   }
                 >
                   <img
-                    src={`${productDetail?.images[1]?.src}`}
+                    src={`${
+                      productDetail?.images !== undefined &&
+                      productDetail?.images[1]?.src
+                    }`}
                     alt="showimage"
                   />
                 </button>
@@ -80,11 +115,19 @@ const ProductsDetail = () => {
               <div className="img-item">
                 <button
                   onClick={() =>
-                    handleClick(`${productDetail?.images[2]?.src}`)
+                    handleClick(
+                      `${
+                        productDetail?.images !== undefined &&
+                        productDetail?.images[2]?.src
+                      }`
+                    )
                   }
                 >
                   <img
-                    src={`${productDetail?.images[2]?.src}`}
+                    src={`${
+                      productDetail?.images !== undefined &&
+                      productDetail?.images[2]?.src
+                    }`}
                     alt="showimage"
                   />
                 </button>
@@ -112,20 +155,25 @@ const ProductsDetail = () => {
                 <p className="new">New</p>
                 <p className="editon">Limited Edition</p>
               </div>
-              <p>Standard Size</p>
+              <p>Standard Size </p>
               <div className="standard-size">
-                <div className="size-ml">
-                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
-                  <p>Eau de Parfum 100ml</p>
-                </div>
-                <div className="size-ml">
-                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
-                  <p>Eau de Parfum 200ml</p>
-                </div>
-                <div className="size-ml">
-                  <img src={`${productDetail?.images[0]?.src}`} alt="" />
-                  <p>Eau de Parfum 300ml</p>
-                </div>
+                {productDetail?.productSize?.map((item: any) => {
+                  return (
+                    <div
+                      className="size-ml"
+                      onClick={() => setSizeID(item.sizes.id)}
+                    >
+                      <img
+                        src={`${
+                          item.products?.images !== undefined &&
+                          item.products?.images[0]?.src
+                        }`}
+                        alt=""
+                      />
+                      <p>{item.sizes.size}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="content-ship">
@@ -167,7 +215,9 @@ const ProductsDetail = () => {
                   onChange={(e: any) => setQuantity(e.target.value)}
                 />
               </div>
-              <button className="addCart">Thêm vào giỏ hàng</button>
+              <button className="addCart" onClick={addToCart}>
+                Thêm vào giỏ hàng
+              </button>
               <button className="buyNow">Mua ngay</button>
               <button className="favorite hide-tablet">
                 <i className="fa-regular fa-heart"></i>

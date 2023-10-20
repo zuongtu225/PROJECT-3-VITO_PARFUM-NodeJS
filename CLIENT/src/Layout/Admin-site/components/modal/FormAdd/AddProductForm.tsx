@@ -34,6 +34,7 @@ const AddProductForm = (props: any) => {
   const handleChangeImages = (event: any) => {
     setImages(event.target.files);
   };
+  console.log(newProduct.sizeId, "new<<111");
 
   useEffect(() => {
     dispatch(getApiCategories());
