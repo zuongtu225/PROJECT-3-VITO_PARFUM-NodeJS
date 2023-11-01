@@ -10,8 +10,9 @@ import {
 } from "../../../../store/action";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
-import { updateCart, updateUser } from "../../../../Api";
+import { deleteCartItem, updateCart, updateUser } from "../../../../Api";
 import { IProduct } from "../../../../Interface";
+import { ToastContainer, toast } from "react-toastify";
 const CustomerCart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -39,8 +40,24 @@ const CustomerCart = () => {
     updatedItemCart.quantity += 1;
   };
 
+  const deleteItemCart = async (id: number) => {
+    const response: any = await deleteCartItem(id);
+    if (response.data.success === true) {
+      toast.success(response.data.message);
+      setTimeout(() => {
+        dispatch(getCartByUser());
+      }, 1500);
+    } else {
+      toast.error(response.data.message);
+    }
+  };
+
   const checkout = () => {
-    navigate("/checkout");
+    if (carts.length > 0) {
+      navigate("/checkout");
+    } else {
+      toast.error("Không có sản phẩm để đặt hàng");
+    }
   };
   useEffect(() => {
     dispatch(getDetailUser());
@@ -49,6 +66,7 @@ const CustomerCart = () => {
 
   return (
     <main>
+      <ToastContainer />
       <div className="homeIndex container">
         <NavLink className="flex items-center gap-1" to={"/"}>
           Trang chủ <VscHome />
@@ -105,7 +123,10 @@ const CustomerCart = () => {
                   <div id="price-after">
                     {item.productSizes?.products?.price * item.quantity}₫
                   </div>
-                  <RiDeleteBinLine className="text-[20px] text-red-500 mr-5 cursor-pointer" />
+                  <RiDeleteBinLine
+                    onClick={() => deleteItemCart(item.id)}
+                    className="text-[20px] text-red-500 mr-5 cursor-pointer"
+                  />
                 </div>
               );
             })}

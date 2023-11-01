@@ -28,6 +28,7 @@ const UsersManager = () => {
       setTimeout(async () => {
         toast.success(response.data.message);
         await dispatch(getApiUsers());
+        await dispatch(getDetailUser());
       }, 1000);
     } else {
       toast.error(response.data.message);

@@ -9,10 +9,6 @@ ordersRouter.post(
   [checkAuthentication],
   controllers.createOrderController
 );
-ordersRouter.put(
-  "/:id",
-  [checkAuthentication],
-  controllers.updateOrderController
-);
+ordersRouter.put("/:id", controllers.updateOrderController);
 
 module.exports = ordersRouter;

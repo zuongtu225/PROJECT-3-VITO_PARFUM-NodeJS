@@ -5,24 +5,19 @@ import {
   getOrderItemByUserRepository,
 } from "../repositories/orderItemsRepository";
 
-export const createOrderItemServices = async ({ id }) => {
+export const createOrderItemServices = async (id, order) => {
   try {
     const listCartUser = await getOneCartbyUserRepository({ id });
-    const min = 100000000;
-    const max = 999999999;
-    const codeOrder = Math.floor(Math.random() * (max - min + 1)) + min;
-    const createOrder = listCartUser.map((item) => ({
-      codeOrder: codeOrder,
+    const newOrderItems = listCartUser.map((item) => ({
+      orderId: order.orderId,
       quantity: item.quantity,
       productSizeId: item.productSizeId,
       userId: item.userId,
     }));
-    const response = await createOrderItemRepository(createOrder);
+    await createOrderItemRepository(newOrderItems);
     return {
-      success: response[1] ? true : false,
-      message: response[1]
-        ? "Tạo OrderItem thành công"
-        : "OrderItem đã tồn tại",
+      success: true,
+      message: "Tạo OrderItem thành công",
     };
   } catch (error) {
     return error;

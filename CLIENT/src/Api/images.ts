@@ -1,10 +1,19 @@
 import axios from "axios";
 
-// get detail
 export const createImages = (data: any) => {
-  
   return axios
-    .post(`http://localhost:9000/images`,data)
+    .post(`http://localhost:9000/images`, data)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error!!!!", error);
+    });
+};
+// update multiple images
+export const updateImage = (id: number, data: any) => {
+  return axios
+    .put(`http://localhost:9000/images/${id}`, data)
     .then((response) => {
       return response;
     })
@@ -13,8 +22,8 @@ export const createImages = (data: any) => {
     });
 };
 
+// get detail
 export const deleteImage = (id: number) => {
-  
   return axios
     .delete(`http://localhost:9000/images/${id}`)
     .then((response) => {
@@ -24,4 +33,3 @@ export const deleteImage = (id: number) => {
       console.error("Error!!!!", error);
     });
 };
-

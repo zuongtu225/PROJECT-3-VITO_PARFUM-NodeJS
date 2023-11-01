@@ -46,3 +46,12 @@ export const deleteCartController = async (req, res) => {
     return handleError.internalServerError(res);
   }
 };
+export const deleteItemCartController = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await services.deleteItemCartServices({ id });
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleError.internalServerError(res);
+  }
+};

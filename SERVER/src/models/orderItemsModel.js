@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   class OrderItems extends Model {
     static associate(models) {
       OrderItems.belongsTo(models.Orders, {
-        foreignKey: "codeOrder",
-        targetKey: "codeOrder",
-        as: "orderItem",
+        foreignKey: "orderId",
+        targetKey: "id",
+        as: "orderItems",
       });
       OrderItems.belongsTo(models.ProductSizes, {
         foreignKey: "productSizeId",
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   OrderItems.init(
     {
-      codeOrder: DataTypes.INTEGER,
+      orderId: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
       productSizeId: DataTypes.INTEGER,
     },

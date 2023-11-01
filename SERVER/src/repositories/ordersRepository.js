@@ -1,18 +1,12 @@
 import db from "../models";
 
-export const createOrderRepository = async (data) => {
-  const response = await db.Orders.findOrCreate({
-    where: {
-      codeOrder: data.codeOrder,
-    },
-    defaults: {
-      codeOrder: data.codeOrder,
-      addressId: data.addressId,
-      paymentId: data.paymentId,
-      total: data.total,
-      userId: data.userId,
-      status: data.status,
-    },
+export const createOrderRepository = async (id, data) => {
+  const response = await db.Orders.create({
+    addressId: data.addressId,
+    paymentId: data.paymentId,
+    userId: id,
+    total: data.total,
+    status: "Pending",
   });
   return response;
 };
@@ -51,7 +45,7 @@ export const getAllOrderRepository = async () => {
       },
       {
         model: db.OrderItems,
-        as: "orderItem",
+        as: "orderItems",
         attributes: {
           exclude: ["codeOrder", "productSizeId", "createdAt", "updatedAt"],
         },

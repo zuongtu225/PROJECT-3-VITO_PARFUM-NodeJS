@@ -33,7 +33,6 @@ export const getCartByUser = createAsyncThunk<any>(
   "getCartByUser",
   async () => {
     const response = await BaseAxios.get("http://localhost:9000/carts/detail");
-    console.log(response);
     return response.data;
   }
 );

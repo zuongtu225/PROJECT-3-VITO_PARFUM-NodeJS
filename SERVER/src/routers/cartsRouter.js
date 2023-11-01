@@ -11,6 +11,11 @@ cartRouter.get(
   controllers.getOneCartbyUserController
 );
 cartRouter.put("/", [checkAuthentication], controllers.updateCartController);
-cartRouter.delete("/", [checkAuthentication], controllers.deleteCartController);
+cartRouter.delete(
+  "/delete",
+  [checkAuthentication],
+  controllers.deleteCartController
+);
+cartRouter.delete("/:id", controllers.deleteItemCartController);
 
 module.exports = cartRouter;

@@ -1,6 +1,6 @@
 import db from "../models";
-export const createOrderItemRepository = async (createOrder) => {
-  const response = await db.OrderItems.bulkCreate(createOrder);
+export const createOrderItemRepository = async (orderItems) => {
+  const response = await db.OrderItems.bulkCreate(orderItems);
   return response;
 };
 

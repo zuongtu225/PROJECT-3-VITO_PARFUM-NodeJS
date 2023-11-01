@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import BaseAxios from "./requsetToken";
 // create
 export const createCart = (newProduct: any) => {
@@ -23,7 +24,17 @@ export const updateCart = (newCart: any) => {
 };
 export const deleteCart = () => {
   return BaseAxios
-    .delete(`http://localhost:9000/carts`,)
+    .delete(`http://localhost:9000/carts/delete`,)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error!!!!", error);
+    });
+};
+export const deleteCartItem = (id:number) => {
+  return axios
+    .delete(`http://localhost:9000/carts/${id}`,)
     .then((response) => {
       return response;
     })

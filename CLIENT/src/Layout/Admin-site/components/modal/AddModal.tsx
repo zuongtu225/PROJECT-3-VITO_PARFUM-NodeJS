@@ -10,7 +10,7 @@ import axios from "axios";
 import ProductFormAdd from "./FormAdd/AddProductForm";
 import { createProduct, createProductSize } from "../../../../Api";
 import { createImages } from "../../../../Api/images";
-import { IBrand, IProduct } from "../../../../Interface";
+import { IBrand, IProduct, IimageFile } from "../../../../Interface";
 import AddBrandForm from "./FormAdd/AddBrandForm";
 import { createBrand } from "../../../../Api/brands";
 import { useDispatch } from "react-redux";
@@ -29,7 +29,6 @@ export function AddModal(props: any): any {
 
   const [product, setProduct] = useState<any>();
   const [category, setCategory] = useState<any>();
-  const [images, setImages] = useState<any>();
   const [provider, setProvider] = useState<any>();
   const [brand, setBrand] = useState<any>();
   const [origin, setOrigin] = useState<any>();
@@ -37,6 +36,7 @@ export function AddModal(props: any): any {
   const [blog, setBlog] = useState<any>();
   const [payment, setPayment] = useState<any>();
   const [open, setOpen] = useState(props.open);
+  const [images, setImages] = useState<any>();
 
   useEffect(() => {
     setOpen(props.open);
@@ -60,8 +60,8 @@ export function AddModal(props: any): any {
   const handleAdd = async () => {
     switch (props.title) {
       case "PRODUCTS":
-        const imageData = { id: product.id, images };
         const formData = new FormData();
+        const imageData = { id: product.id, images };
         for (let i of Object.entries(imageData)) formData.append(i[0], i[1]);
         for (let img of images) formData.append("images", img);
         const responseProduct: any = await createProduct(product);

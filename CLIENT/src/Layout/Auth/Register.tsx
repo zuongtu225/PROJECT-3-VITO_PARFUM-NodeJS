@@ -95,7 +95,7 @@ const Register = () => {
             className="mt-2 flex flex-col lg:w-1/2 w-8/12"
           >
             {/* email */}
-            {error?.isError == true && (
+            {error?.isError === true && (
               <p className="text-black-700">{error.emailMSG} </p>
             )}
             <div className="flex flex-wrap items-stretch w-full mb-4 relative h-15 bg-white items-center rounded mb-6 pr-10">
@@ -113,7 +113,7 @@ const Register = () => {
             </div>
 
             {/* password */}
-            {error?.isError == true && (
+            {error?.isError === true && (
               <p className="text-red-700">{error.passwordMSG} </p>
             )}
             <div className="flex flex-wrap items-stretch w-full relative h-15 bg-white items-center rounded mb-4">
@@ -136,7 +136,7 @@ const Register = () => {
             </div>
 
             {/* confirm password */}
-            {error?.isError == true && (
+            {error?.isError === true && (
               <p className="text-red-700">{error.confirmPassWordMSG} </p>
             )}
             <div className="flex flex-wrap items-stretch w-full relative h-15 bg-white items-center rounded mb-4">

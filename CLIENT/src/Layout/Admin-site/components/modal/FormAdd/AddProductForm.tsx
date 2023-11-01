@@ -31,11 +31,10 @@ const AddProductForm = (props: any) => {
     description: "",
   });
   const [images, setImages] = useState<any>([]);
+
   const handleChangeImages = (event: any) => {
     setImages(event.target.files);
   };
-  console.log(newProduct.sizeId, "new<<111");
-
   useEffect(() => {
     dispatch(getApiCategories());
     dispatch(getApiBrands());

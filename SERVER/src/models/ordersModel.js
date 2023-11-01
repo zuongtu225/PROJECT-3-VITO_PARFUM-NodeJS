@@ -19,15 +19,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "users",
       });
       Orders.hasMany(models.OrderItems, {
-        foreignKey: "codeOrder",
-        sourceKey: "codeOrder",
-        as: "orderItem",
+        foreignKey: "orderId",
+        sourceKey: "id",
+        as: "orderItems",
       });
     }
   }
   Orders.init(
     {
-      codeOrder: DataTypes.BIGINT,
       addressId: DataTypes.INTEGER,
       paymentId: DataTypes.INTEGER,
       userId: DataTypes.BIGINT,

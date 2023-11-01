@@ -39,9 +39,9 @@ const Profile = () => {
   const [code, setCode] = useState();
   const [exp, setExp] = useState();
   const [cvc, setCvc] = useState();
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [avatar, setAvatar] = useState<any>();
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLastName] = useState<string>();
 
   const userDetail: any = useSelector(
     (state: any) => state?.userReducer?.userDetail
@@ -53,22 +53,9 @@ const Profile = () => {
   }, []);
 
   const updateUserApi = async () => {
-    const newUserAvatar = {
-      ...userDetail,
-      avatar: avatar,
-      firstName,
-      lastName,
-    };
-    const res = await updateUser(newUserAvatar);
-    console.log(res);
-
-    // if (res.success === true) {
-    //   toast.success("Cập nhật thành công");
-    //   dispatch(getDetailUser());
-    //   setOpen(false);
-    // } else {
-    //   toast.error("Cập nhật thất bại");
-    // }
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    const res = await updateUser(formData);
   };
   return (
     <>

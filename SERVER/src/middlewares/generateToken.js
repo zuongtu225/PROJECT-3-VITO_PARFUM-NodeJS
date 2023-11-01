@@ -12,6 +12,6 @@ const generateAccessToken = (id, firstName, lastName, email, roleId) => {
     },
     process.env.ACCESS_TOKEN_SECRET
   );
-  return user;
+  return user; // trả về 1 token
 };
 module.exports = { generateAccessToken };

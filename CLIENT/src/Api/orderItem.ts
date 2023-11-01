@@ -2,8 +2,8 @@
 import axios from "axios";
 import BaseAxios from "./requsetToken";
 
-export const createOrderItem = () => {
-  return BaseAxios.post(`http://localhost:9000/orderItems`,)
+export const createOrderItem = (orderId: any) => {
+  return BaseAxios.post(`http://localhost:9000/orderItems`, {orderId}) 
     .then((response) => {
       return response;
     })

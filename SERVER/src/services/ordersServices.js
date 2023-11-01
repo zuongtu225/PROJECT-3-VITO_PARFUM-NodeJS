@@ -7,27 +7,14 @@ import {
 
 export const createOrderServices = async (id, data) => {
   try {
-    const orderItems = await getAllOrderItemRepository();
-    const uniqueCodeOrders = [
-      ...new Set(orderItems.map((item) => item.codeOrder)),
-    ];
-    for (const item of uniqueCodeOrders) {
-      const createOrder = {
-        codeOrder: item,
-        addressId: data.addressId,
-        paymentId: 1,
-        userId: id,
-        total: data.total,
-        status: "Pending",
-      };
-      const response = await createOrderRepository(createOrder);
-      return {
-        success: response[1] === true ? true : false,
-        data:
-          response[1] === true ? "Tạo đơn thành công" : "Đơn hàng đã tồn tại",
-      };
-    }
+    const response = await createOrderRepository(id, data);
+    return {
+      success: true,
+      data: response,
+      message: "Tạo đơn thành công",
+    };
   } catch (error) {
+    console.log(error, "res");
     return error;
   }
 };
@@ -43,6 +30,7 @@ export const updateOrderServices = async (id, body) => {
   try {
     const response = await updateOrderRepository(id, body);
     return {
+      success: response > 0 ? true : false,
       message: response > 0 ? "Cập nhật thành công" : "Id không đúng",
     };
   } catch (error) {

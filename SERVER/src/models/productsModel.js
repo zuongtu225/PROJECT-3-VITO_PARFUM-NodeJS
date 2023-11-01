@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       categoryId: DataTypes.INTEGER,
       brandId: DataTypes.INTEGER,
       title: DataTypes.STRING,
-      price: DataTypes.INTEGER,
+      price: DataTypes.BIGINT,
       stock: DataTypes.INTEGER,
       description: DataTypes.TEXT,
       status: DataTypes.BOOLEAN,

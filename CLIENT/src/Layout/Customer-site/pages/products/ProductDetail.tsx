@@ -30,7 +30,6 @@ const ProductsDetail = () => {
   const productSizes = useSelector(
     (state: any) => state?.productSizeReducer?.productSizes
   );
-
   const addToCart = async () => {
     const productId = Number(id);
     const newProductSize = productSizes?.filter(
@@ -42,15 +41,14 @@ const ProductsDetail = () => {
       quantity: +quantity,
     };
     const resCart: any = await createCart(newCart);
-    console.log(resCart, "<<<");
 
     if (resCart.data.success === true) {
-      toast.success("Đặt hàng thành công");
+      toast.success(resCart.data.message);
       setTimeout(() => {
         navigate("/cart");
       }, 1500);
     } else {
-      toast.error("Đặt hàng thất bại");
+      toast.error(resCart.data.message);
     }
   };
 
@@ -164,10 +162,7 @@ const ProductsDetail = () => {
                       onClick={() => setSizeID(item.sizes.id)}
                     >
                       <img
-                        src={`${
-                          item.products?.images !== undefined &&
-                          item.products?.images[0]?.src
-                        }`}
+                        src="https://www.wildstone.in/cdn/shop/files/3_11_58e50d58-d099-45d7-8746-fbfd9f67bae5.jpg?v=1688035904"
                         alt=""
                       />
                       <p>{item.sizes.size}</p>

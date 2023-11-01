@@ -4,13 +4,16 @@ import {
   getOneCartbyUserRepository,
   getAllCartRepository,
   updateCartRepository,
+  deleteItemCartRepository,
 } from "../repositories/cartRepository";
 export const createCartServices = async (id, data) => {
   try {
     const response = await createCartRepository(id, data);
     return {
       success: response[1] ? true : false,
-      message: response[1] ? "Tạo Cart thành công" : " Cart đã tồn tại",
+      message: response[1]
+        ? "Thêm sản phẩm thành công"
+        : " Sản phẩm đã có trong giỏ hàng",
     };
   } catch (error) {
     return error;
@@ -50,6 +53,17 @@ export const deleteCartServices = async ({ id }) => {
     return {
       message: response > 0 ? "Xóa thành công" : "Id không đúng",
       success: response > 0 ? true : false,
+    };
+  } catch (error) {
+    return error;
+  }
+};
+export const deleteItemCartServices = async ({ id }) => {
+  try {
+    const response = await deleteItemCartRepository(Number(id));
+    return {
+      success: response > 0 ? true : false,
+      message: response > 0 ? "Xóa thành công" : "Id không đúng",
     };
   } catch (error) {
     return error;

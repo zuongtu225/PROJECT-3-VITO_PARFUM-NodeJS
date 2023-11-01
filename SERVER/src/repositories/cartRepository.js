@@ -79,6 +79,7 @@ export const getOneCartbyUserRepository = async ({ id }) => {
       exclude: ["createdAt", "updatedAt"],
     },
   });
+
   return data;
 };
 
@@ -94,6 +95,12 @@ export const updateCartRepository = async (id, body) => {
 export const deleteCartRepository = async ({ id }) => {
   const response = await db.Carts.destroy({
     where: { userId: id },
+  });
+  return response;
+};
+export const deleteItemCartRepository = async (id) => {
+  const response = await db.Carts.destroy({
+    where: { id },
   });
   return response;
 };

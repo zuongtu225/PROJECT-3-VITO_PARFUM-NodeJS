@@ -9,10 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      codeOrder: {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-      },
       addressId: {
         type: Sequelize.INTEGER,
         allowNull: false,

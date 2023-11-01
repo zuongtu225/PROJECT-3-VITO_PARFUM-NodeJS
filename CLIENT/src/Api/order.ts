@@ -25,9 +25,9 @@ export const deleteOrder = (order: any) => {
     });
 };
 
-export const updateOrderApi = (order: any) => {
+export const updateOrderApi = (data: any) => {
   return axios
-    .put(`http://localhost:5000/orders/${order.id}`, order)
+    .put(`http://localhost:9000/orders/${data.id}`, {status:data.status})
     .then((response) => {
       return response;
     })

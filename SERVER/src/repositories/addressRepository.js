@@ -1,5 +1,6 @@
 import db from "../models";
 export const createAddressRepository = async (id, data) => {
+  console.log(data);
   const response = await db.Addresses.findOrCreate({
     where: { address: data.address },
     defaults: {
@@ -9,6 +10,7 @@ export const createAddressRepository = async (id, data) => {
       phoneNumber: data.phone,
     },
   });
+
   return response;
 };
 export const getAllAddressRepository = async () => {

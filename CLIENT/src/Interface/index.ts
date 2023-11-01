@@ -53,7 +53,7 @@ export interface ICartProduct {
   brand: string;
   name: string;
   category: string;
-  images:  [];
+  images: [];
   provider: string;
   quantity: number;
   comments: IComments[];
@@ -69,12 +69,12 @@ export interface ICartProduct {
 }
 export interface IVisa {
   id: number;
-  code: string; 
+  code: string;
   name: string;
   cvc: number;
-  cardNumber: Number; 
-  issuer: string; 
-  isActive: boolean; 
+  cardNumber: Number;
+  issuer: string;
+  isActive: boolean;
 }
 export interface IUser {
   id: number;
@@ -94,7 +94,7 @@ export interface IBank {
   name: string;
   code: string;
   type: string;
-  exp: string; 
+  exp: string;
   cvc: number;
   wallet: number;
 }
@@ -108,4 +108,18 @@ export interface IOder {
   date: Date;
   codeOrder: number;
   status: string;
+}
+
+export interface Iimage {
+  id: number;
+  file: IimageFile;
+}
+export interface IimageFile {
+  lastModified: number;
+  lastModifiedDate: Date;
+  name: string;
+  size: number;
+  type: string;
+  webkitRelativePath: string;
+  length: number;
 }

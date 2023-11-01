@@ -1,15 +1,25 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IBrand, ICategory, IProduct, ISize } from "../../../../../Interface";
+import {
+  IBrand,
+  ICategory,
+  IProduct,
+  ISize,
+  Iimage,
+  IimageFile,
+} from "../../../../../Interface";
 import { AppDispatch } from "../../../../../store";
 import {
   getApiBrands,
   getApiCategories,
   getApiSizes,
 } from "../../../../../store/action";
+import { updateImage } from "../../../../../Api/images";
 
 const EditProductForm = (props: any) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [image, setImage] = useState<any>();
+
   const productDetail = useSelector(
     (state: any) => state?.productReducer?.productDetail
   );
@@ -17,6 +27,7 @@ const EditProductForm = (props: any) => {
   const categories = useSelector(
     (state: any) => state?.categoryReducer?.categories
   );
+
   const brands = useSelector((state: any) => state?.brandReducer?.brands);
   const sizes = useSelector((state: any) => state?.sizeReducer?.sizes);
   const [newProduct, setNewProduct] = useState<any>({
@@ -29,6 +40,12 @@ const EditProductForm = (props: any) => {
     price: 0,
     description: productDetail.description,
   });
+  const handleChangeImage = async (e: any, id: number) => {
+    const formData = new FormData();
+    const imageData = { src: e.target.files };
+    for (let i of Object.entries(imageData)) formData.append(i[0], i[1]);
+    const response = await updateImage(id, formData);
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -38,7 +55,6 @@ const EditProductForm = (props: any) => {
     };
     setNewProduct(product);
   };
-
   useEffect(() => {
     dispatch(getApiCategories());
     dispatch(getApiBrands());
@@ -51,7 +67,7 @@ const EditProductForm = (props: any) => {
 
   return (
     <div>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+      <div className="bg-white shadow-md rounded px-8 pt-6   flex flex-col ">
         <div className="-mx-3 md:flex mb-6">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <input
@@ -75,7 +91,11 @@ const EditProductForm = (props: any) => {
               >
                 <option>Thương hiệu</option>;
                 {brands?.map((item: IBrand) => {
-                  return <option value={item.id}>{item.title}</option>;
+                  return (
+                    <option key={item.id} value={item.id}>
+                      {item.title}
+                    </option>
+                  );
                 })}
               </select>
             </div>
@@ -144,6 +164,25 @@ const EditProductForm = (props: any) => {
               </select>
             </div>
           </div>
+        </div>
+        <div className="w-[100%]">
+          {/* image  */}
+          {productDetail?.images?.map((item: any, index: number) => {
+            return (
+              <div
+                key={item.id}
+                className=" flex justify-between items-center  mt-5 mb-5"
+              >
+                <p>Ảnh {index + 1}</p>
+                <img src={`${item.src}`} alt="" className="w-[50px] h-[50px]" />
+                <input
+                  type="file"
+                  className="w-[50%]"
+                  onChange={(e: any) => handleChangeImage(e, item.id)}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

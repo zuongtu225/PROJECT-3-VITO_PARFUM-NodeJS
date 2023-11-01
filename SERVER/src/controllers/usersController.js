@@ -20,18 +20,20 @@ export const getOneUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  const avatar = req.file;
+  console.log(avatar, "<<==== avatar<< >>");
   try {
     const { id } = req.user;
-    const avatar = req.file;
-    const response = await services.updateUserServices(id, {
-      ...req.body,
-      avatar: avatar.path,
-    });
-    return res.status(200).json(response);
+    // const response = await services.updateUserServices(id, {
+    //   ...req.body,
+    //   avatar: avatar.path,
+    // });
+    // return res.status(200).json(response);
   } catch (error) {
     return handleError.internalServerError(res);
   }
 };
+
 export const updateStatusUser = async (req, res) => {
   const { id } = req.params;
   try {

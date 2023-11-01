@@ -11,17 +11,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../../store";
 
 import { ToastContainer, toast } from "react-toastify";
-import { getDetailUser } from "../../../../../store/action";
+import { getCartByUser, getDetailUser } from "../../../../../store/action";
 const CustomerHeader = () => {
   const nagivate = useNavigate();
   const auth: any = localStorage.getItem("auth") || "";
   const userDetail = useSelector(
     (state: any) => state?.userReducer?.userDetail
   );
+  const carts: any = useSelector((state: any) => state?.cartReducer?.carts);
+
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getDetailUser());
   }, [auth]);
+  useEffect(() => {
+    dispatch(getCartByUser());
+  }, []);
 
   //log out
   const logout = async () => {
@@ -143,11 +148,8 @@ const CustomerHeader = () => {
             <LuStore />
 
             <RiShoppingCart2Line className="w-8 h-6" onClick={cartPage} />
-            {userDetail?.id && (
-              <p id="length-cart">{userDetail?.cart?.length}</p>
-            )}
+            {userDetail?.id && <p id="length-cart">{carts?.length}</p>}
           </div>
-          {/* <i className="fa-solid fa-bars icon-menu hide-desktop" /> */}
         </div>
       </div>
       <div className="mega-menu container">

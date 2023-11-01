@@ -49,14 +49,11 @@ const Checkout = () => {
     setTotal(calculateTotalPrice());
   }, [carts]);
 
-  // vẫn phải cập nhật visa ở ngân hàng
   const banks: any = useSelector((state: any) => state?.bankReducer?.banks);
 
   useEffect(() => {
     setTotal(calculateTotalPrice());
   }, []);
-
-  // const orders: any = useSelector((state: any) => state?.orderReducer?.orders);
 
   const [checkCvc, setCheckCvc] = useState<boolean>(false);
   const [name, setName] = useState<string>();
@@ -121,29 +118,33 @@ const Checkout = () => {
   };
   // cod
   const paymentCOD = async () => {
-    const orderItem: any = await createOrderItem();
     const infoAddress = {
       fullName: name,
-      phone,
-      address,
+      phone: phone,
+      address: address,
     };
     const resAddress: any = await createAddress(infoAddress);
-    const addressId = resAddress.data.response[0].id;
-
-    if (orderItem.data.success === true) {
-      const createOrders = {
-        paymentId: 1,
-        addressId: addressId,
-        total,
-      };
-      const resOrder: any = await createOrder(createOrders);
-      if (resOrder.success === true) {
-        toast.success("Đặt hàng thành công");
+    const addressId = resAddress?.data?.response[0]?.id;
+    const newOrder = {
+      paymentId: 1,
+      addressId: addressId,
+      total,
+    };
+    const resOrder: any = await createOrder(newOrder);
+    const orderItem: any = await createOrderItem(resOrder.data.data.id);
+    if (orderItem?.data?.success === true) {
+      if (resOrder.data.success === true) {
+        toast.success(resOrder.data.message);
         await deleteCart();
+        await dispatch(getCartByUser());
         setTimeout(() => {
           navigate("/");
         }, 1500);
+      } else {
+        toast.error(resOrder.data.message);
       }
+    } else {
+      toast.error(orderItem.data.message);
     }
   };
 

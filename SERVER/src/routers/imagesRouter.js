@@ -10,9 +10,10 @@ imageRouter.post(
 );
 imageRouter.get("/", controllers.getAllImageController);
 imageRouter.get("/:id", controllers.getOneImageController);
+//
 imageRouter.put(
   "/:id",
-  uploadCloud.single("image"),
+  uploadCloud.single("file"),
   controllers.updateImageController
 );
 imageRouter.delete("/:id", controllers.deleteImageController);

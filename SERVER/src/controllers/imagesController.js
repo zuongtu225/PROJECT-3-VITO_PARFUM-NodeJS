@@ -2,6 +2,7 @@ import * as services from "../services";
 import * as handleError from "../middlewares/handleError";
 export const createImageController = async (req, res) => {
   try {
+    // console.log(req.files, "file<<<");
     const data = req?.files?.map((el) => ({
       src: el.path,
       productId: +req.body.id,
@@ -32,10 +33,12 @@ export const getOneImageController = async (req, res) => {
 
 export const updateImageController = async (req, res) => {
   try {
-    const { id } = req.params;
-    const src = req.file.path;
-    const response = await services.updateImageService(id, src);
-    return res.status(200).json(response);
+    console.log(req.file, "<<<");
+    console.log(req.files, "<<<");
+    console.log(req.body, "<<<");
+    // const src = req.file.path;
+    // const response = await services.updateImageService(id, src);
+    // return res.status(200).json(response);
   } catch (error) {
     return handleError.internalServerError(res);
   }
